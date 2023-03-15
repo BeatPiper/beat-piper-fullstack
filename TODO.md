@@ -1,0 +1,2 @@
+- Add prettier format everything and make a new commit
+- Redirect to on login
