@@ -6,14 +6,14 @@ import { prisma } from '@/common/prisma';
 import { nextAuthOptions } from '@/common/auth';
 
 export async function createContext({ req, res }: CreateNextContextOptions) {
-    const session = await getServerSession(req, res, nextAuthOptions);
+  const session = await getServerSession(req, res, nextAuthOptions);
 
-    return {
-        req,
-        res,
-        session,
-        prisma,
-    };
+  return {
+    req,
+    res,
+    session,
+    prisma,
+  };
 }
 
 export type IContext = inferAsyncReturnType<typeof createContext>;

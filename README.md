@@ -1,6 +1,7 @@
 # Beat Piper
 
 Stack:
+
 - Next.js
 - Prisma
 - ESLint

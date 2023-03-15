@@ -3,22 +3,17 @@ import { getServerSession } from 'next-auth';
 
 import { nextAuthOptions } from './auth';
 
-export const requireAuth =
-    (func: GetServerSideProps) => async (ctx: GetServerSidePropsContext) => {
-        const session = await getServerSession(
-            ctx.req,
-            ctx.res,
-            nextAuthOptions
-        );
+export const requireAuth = (func: GetServerSideProps) => async (ctx: GetServerSidePropsContext) => {
+  const session = await getServerSession(ctx.req, ctx.res, nextAuthOptions);
 
-        if (!session) {
-            return {
-                redirect: {
-                    destination: '/log-in',
-                    permanent: false,
-                },
-            };
-        }
-
-        return await func(ctx);
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/log-in',
+        permanent: false,
+      },
     };
+  }
+
+  return await func(ctx);
+};

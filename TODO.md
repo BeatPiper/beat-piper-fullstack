@@ -1,2 +1,2 @@
 - Add prettier format everything and make a new commit
-- Redirect to on login
+- Redirect on logout when on authenticated page
