@@ -39,7 +39,7 @@ function LogIn() {
         const result = await signIn('credentials', { ...data, redirect: false });
         if (result?.ok) {
           form.reset();
-          await router.push('/');
+          await router.push((router.query.callbackUrl as string) || '/');
         } else {
           form.setErrors({ email: 'Wrong email or password' });
         }
