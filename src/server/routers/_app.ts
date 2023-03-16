@@ -3,8 +3,10 @@ import { hash } from 'argon2';
 
 import { procedure, router } from '../trpc';
 import { userSchema } from '@/common/validation/auth';
+import { spotifyRouter } from '@/server/routers/spotify';
 
 export const appRouter = router({
+  spotify: spotifyRouter,
   signup: procedure.input(userSchema).mutation(async ({ input, ctx }) => {
     const { email, password } = input;
 

@@ -1,10 +1,19 @@
 import Head from 'next/head';
-import { Image, Stack, Title, Text, useMantineTheme } from '@mantine/core';
+import { Image, Stack, Title, Text, useMantineTheme, Group, Button } from '@mantine/core';
 import { useSession } from 'next-auth/react';
+import { IconPlayerPlay } from '@tabler/icons-react';
+import Link from 'next/link';
+import SpotifyLogin from '@/components/SpotifyLogin';
+import { trpc } from '@/utils/trpc';
 
-export default function Home() {
+function Home() {
   const theme = useMantineTheme();
   const { data: session, status } = useSession();
+
+  const spotifyQuery = trpc.spotify.get.useQuery(undefined, {
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
 
   return (
     <>
@@ -17,6 +26,20 @@ export default function Home() {
       {status === 'authenticated' ? (
         <Stack>
           <Title order={2}>Hi {session.user.email}, thank you for using Beat Piper</Title>
+          {spotifyQuery.isSuccess && (
+            <Group>
+              {spotifyQuery.data ? (
+                <Button component={Link} href="/playlists" leftIcon={<IconPlayerPlay />}>
+                  Start Piping
+                </Button>
+              ) : (
+                <Button leftIcon={<IconPlayerPlay />} disabled>
+                  Start Piping
+                </Button>
+              )}
+              <SpotifyLogin spotifyQuery={spotifyQuery} />
+            </Group>
+          )}
         </Stack>
       ) : (
         <Stack align="center">
@@ -28,3 +51,5 @@ export default function Home() {
     </>
   );
 }
+
+export default Home;
