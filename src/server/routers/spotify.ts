@@ -2,13 +2,10 @@ import { procedure, router } from '@/server/trpc';
 import {
   createOrUpdateSpotifyUser,
   deleteSpotifyUser,
+  getPlaylists,
   getSpotifyUser,
-  grantSpotify,
   spotifyApi,
 } from '@/utils/spotify';
-import { inferRouterInputs } from '@trpc/server';
-
-const SPOTIFY_PAGINATION_LIMIT = 50;
 
 export const spotifyRouter = router({
   get: procedure.query(async ({ ctx: { session, res } }) => {
@@ -82,23 +79,6 @@ export const spotifyRouter = router({
       return res.status(401).json({ error: 'Unauthenticated' });
     }
 
-    await grantSpotify(session.user.userId);
-
-    const playlistsResponse = await spotifyApi.getUserPlaylists({ limit: SPOTIFY_PAGINATION_LIMIT });
-
-    if (playlistsResponse.statusCode === 200) {
-      const start = playlistsResponse.body;
-      const playlists = start.items;
-
-      let offset = SPOTIFY_PAGINATION_LIMIT;
-      while (playlists.length < start.total) {
-        playlists.push(
-          ...(await spotifyApi.getUserPlaylists({ offset, limit: SPOTIFY_PAGINATION_LIMIT })).body.items
-        );
-        offset += SPOTIFY_PAGINATION_LIMIT;
-      }
-
-      return playlists;
-    }
+    return getPlaylists(session.user.userId);
   }),
 });

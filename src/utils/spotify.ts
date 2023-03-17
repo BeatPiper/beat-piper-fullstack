@@ -9,6 +9,8 @@ export const spotifyApi = new SpotifyWebApi({
   redirectUri: `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/trpc/spotify.callback`,
 });
 
+const SPOTIFY_PAGINATION_LIMIT = 50;
+
 export async function getSpotifyUser(userId: User['id']) {
   return prisma.spotifyUser.findFirst({
     where: { userId },
@@ -70,4 +72,25 @@ export async function deleteSpotifyUser(userId: User['id']) {
   return prisma.spotifyUser.delete({
     where: { userId },
   });
+}
+
+export async function getPlaylists(userId: User['id']) {
+  await grantSpotify(userId);
+
+  const playlistsResponse = await spotifyApi.getUserPlaylists({ limit: SPOTIFY_PAGINATION_LIMIT });
+
+  if (playlistsResponse.statusCode === 200) {
+    const start = playlistsResponse.body;
+    const playlists = start.items;
+
+    let offset = SPOTIFY_PAGINATION_LIMIT;
+    while (playlists.length < start.total) {
+      playlists.push(
+        ...(await spotifyApi.getUserPlaylists({ offset, limit: SPOTIFY_PAGINATION_LIMIT })).body.items
+      );
+      offset += SPOTIFY_PAGINATION_LIMIT;
+    }
+
+    return playlists;
+  }
 }
