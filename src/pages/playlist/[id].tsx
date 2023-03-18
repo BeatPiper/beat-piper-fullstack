@@ -30,6 +30,7 @@ import {
   IconCheck,
   IconChecklist,
   IconChecks,
+  IconInfoCircle,
   IconListDetails,
   IconMusic,
   IconSquare,
@@ -305,84 +306,85 @@ function PlaylistTable() {
                     <Spoiler maxHeight={100} showLabel="Show more" hideLabel="Hide">
                       <Stack>
                         {maps.map(map => (
-                          <HoverCard
-                            key={map.id}
-                            width={350}
-                            shadow="md"
-                            withArrow
-                            position="top-start"
-                            openDelay={200}
-                            withinPortal
-                          >
-                            <HoverCard.Target>
-                              <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <Checkbox
-                                  value={map.id}
-                                  label={map.name}
-                                  checked={selectedMaps.includes(map.id)}
-                                  onChange={() => {
-                                    if (selectedMaps.includes(map.id)) {
-                                      handlers.filter(id => id !== map.id);
-                                    } else {
-                                      handlers.append(map.id);
-                                    }
-                                  }}
-                                />
-                              </div>
-                            </HoverCard.Target>
-                            <HoverCard.Dropdown>
-                              <Stack spacing={1}>
-                                {map.versions && map.versions.length > 0 && (
-                                  <Group spacing="sm" noWrap>
-                                    <Text weight="bold">Difficulties</Text>
-                                    <Group spacing={5}>
-                                      {map.versions[0].diffs.map(diff => (
-                                        <Badge key={diff.difficulty} size="sm">
-                                          {diff.difficulty}
-                                        </Badge>
-                                      ))}
+                          <Group key={map.id} spacing="xs">
+                            <Checkbox
+                              value={map.id}
+                              label={map.name}
+                              checked={selectedMaps.includes(map.id)}
+                              onChange={() => {
+                                if (selectedMaps.includes(map.id)) {
+                                  handlers.filter(id => id !== map.id);
+                                } else {
+                                  handlers.append(map.id);
+                                }
+                              }}
+                            />
+                            <HoverCard
+                              key={map.id}
+                              width={350}
+                              shadow="md"
+                              withArrow
+                              position="top-start"
+                              // openDelay={200}
+                              withinPortal
+                            >
+                              <HoverCard.Target>
+                                <IconInfoCircle size={16} />
+                              </HoverCard.Target>
+                              <HoverCard.Dropdown>
+                                <Stack spacing={1}>
+                                  {map.versions && map.versions.length > 0 && (
+                                    <Group spacing="sm" noWrap>
+                                      <Text weight="bold">Difficulties</Text>
+                                      <Group spacing={5}>
+                                        {map.versions[0].diffs.map(diff => (
+                                          <Badge key={diff.difficulty} size="sm">
+                                            {diff.difficulty}
+                                          </Badge>
+                                        ))}
+                                      </Group>
                                     </Group>
-                                  </Group>
-                                )}
-                                {map.description && (
-                                  <Group spacing={1}>
-                                    <Text weight="bold">Description</Text>
-                                    <Spoiler maxHeight={50} showLabel="Show more" hideLabel="Hide">
-                                      <Text>{map.description}</Text>
-                                    </Spoiler>
-                                  </Group>
-                                )}
-                                <Group spacing="sm">
-                                  <Text weight="bold">Ranked</Text>
-                                  {map.ranked ? (
-                                    <IconCheck color="green" size={16} />
-                                  ) : (
-                                    <IconX color="red" size={16} />
                                   )}
-                                </Group>
-                                <Group spacing="sm">
-                                  <Text weight="bold">Automapper</Text>
-                                  {map.automapper ? (
-                                    <IconCheck color="green" size={16} />
-                                  ) : (
-                                    <IconX color="red" size={16} />
-                                  )}
-                                </Group>
-                                {map.tags && map.tags.length > 0 && (
-                                  <Group spacing="sm" noWrap>
-                                    <Text weight="bold">Tags</Text>
-                                    <Group spacing={5}>
-                                      {map.tags.map(tag => (
-                                        <Badge key={tag} size="xs">
-                                          {tag}
-                                        </Badge>
-                                      ))}
+                                  {map.description && (
+                                    <Group spacing={1}>
+                                      <Text weight="bold">Description</Text>
+                                      <Spoiler maxHeight={50} showLabel="Show more" hideLabel="Hide">
+                                        <Text>{map.description}</Text>
+                                      </Spoiler>
                                     </Group>
+                                  )}
+                                  <Group spacing="sm">
+                                    <Text weight="bold">Ranked</Text>
+                                    {map.ranked ? (
+                                      <IconCheck color="green" size={16} />
+                                    ) : (
+                                      <IconX color="red" size={16} />
+                                    )}
                                   </Group>
-                                )}
-                              </Stack>
-                            </HoverCard.Dropdown>
-                          </HoverCard>
+                                  <Group spacing="sm">
+                                    <Text weight="bold">Automapper</Text>
+                                    {map.automapper ? (
+                                      <IconCheck color="green" size={16} />
+                                    ) : (
+                                      <IconX color="red" size={16} />
+                                    )}
+                                  </Group>
+                                  {map.tags && map.tags.length > 0 && (
+                                    <Group spacing="sm" noWrap>
+                                      <Text weight="bold">Tags</Text>
+                                      <Group spacing={5}>
+                                        {map.tags.map(tag => (
+                                          <Badge key={tag} size="xs">
+                                            {tag}
+                                          </Badge>
+                                        ))}
+                                      </Group>
+                                    </Group>
+                                  )}
+                                </Stack>
+                              </HoverCard.Dropdown>
+                            </HoverCard>
+                          </Group>
                         ))}
                       </Stack>
                     </Spoiler>
