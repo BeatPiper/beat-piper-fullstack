@@ -159,9 +159,11 @@ function PlaylistTable() {
 
   if (isLoading) {
     return (
-      <Group position="center">
-        <Loader size="xl" />
-      </Group>
+      <Stack align="center">
+        <Image src="/logo.png" height={250} fit="contain" alt="Logo" />
+        <Title>Fetching playlist...</Title>
+        <Loader size="xl" mt="xl" />
+      </Stack>
     );
   }
 
@@ -174,12 +176,12 @@ function PlaylistTable() {
   }
 
   if (!matchedTracks) {
-    // show progress
+    // TODO: show progress
     return (
       <Stack align="center">
         <Image src="/logo.png" height={250} fit="contain" alt="Logo" />
-        <Title>Piping</Title>
-        <Loader size="xl" variant="dots" mt="xl" />
+        <Title>Piping...</Title>
+        <Loader size="xl" variant="bars" mt="xl" />
       </Stack>
     );
   }
