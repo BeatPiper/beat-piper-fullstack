@@ -28,6 +28,7 @@
     "@trpc/react-query": "^10.16.0",
     "@trpc/server": "^10.16.0",
     "argon2": "^0.30.3",
+    "beatsaver-api": "^2.1.4",
     "dayjs": "^1.11.7",
     "next": "^13.2.4",
     "next-auth": "^4.20.1",
