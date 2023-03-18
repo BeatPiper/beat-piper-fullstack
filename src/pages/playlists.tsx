@@ -1,7 +1,7 @@
 import { trpc } from '@/utils/trpc';
 import Head from 'next/head';
-import { Anchor, Avatar, Button, Group, Loader, Table, Text } from '@mantine/core';
-import { IconMusic, IconTestPipe, IconUser } from '@tabler/icons-react';
+import { Anchor, Avatar, Button, Group, Loader, Stack, Table, Text } from '@mantine/core';
+import { IconMusic, IconTestPipe, IconUser, IconHome } from '@tabler/icons-react';
 import Link from 'next/link';
 
 function Playlists() {
@@ -10,7 +10,14 @@ function Playlists() {
       <Head>
         <title>Playlists</title>
       </Head>
-      <PlaylistTable />
+      <Stack>
+        <Group grow>
+          <Button component={Link} href="/" leftIcon={<IconHome />} color="gray">
+            Home
+          </Button>
+        </Group>
+        <PlaylistTable />
+      </Stack>
     </>
   );
 }
