@@ -65,16 +65,25 @@ export const spotifyRouter = router({
     if (statusCode === 200) {
       const { access_token: accessToken, refresh_token: refreshToken, expires_in } = body;
 
+      spotifyApi.setAccessToken(accessToken);
+      spotifyApi.setRefreshToken(refreshToken);
+      const me = await spotifyApi.getMe();
+
+      if (me.statusCode !== 200) {
+        return res.status(500).json({ error: `Spotify returned ${me.statusCode}` });
+      }
+
       await createOrUpdateSpotifyUser({
         accessToken,
         refreshToken,
         expiresAt: new Date(Date.now() + expires_in * 1000),
         userId,
+        spotifyId: me.body.id,
       });
 
       return res.redirect('/'); // TODO: redirect to previous page
     } else {
-      return res.status(200).json({ error: `Spotify returned ${statusCode}` });
+      return res.status(500).json({ error: `Spotify returned ${statusCode}` });
     }
   }),
   playlists: procedure.query(async ({ ctx: { session, res } }) => {

@@ -20,10 +20,11 @@ model User {
 }
 
 model SpotifyUser {
-  accessToken  String
-  refreshToken String
-  expiresAt    DateTime
+  accessToken   String
+  refreshToken  String
+  expiresAt     DateTime
+  spotifyId     String   @unique
 
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId       String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId        String   @unique
 }

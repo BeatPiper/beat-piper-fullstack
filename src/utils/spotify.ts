@@ -22,6 +22,7 @@ export async function createOrUpdateSpotifyUser({
   refreshToken,
   expiresAt,
   userId,
+  spotifyId,
 }: SpotifyUser) {
   return prisma.spotifyUser.upsert({
     where: { userId },
@@ -35,6 +36,7 @@ export async function createOrUpdateSpotifyUser({
       refreshToken,
       expiresAt,
       userId,
+      spotifyId,
     },
   });
 }
