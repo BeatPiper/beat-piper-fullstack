@@ -55,3 +55,15 @@ export default class BeatSaverClient {
     };
   }
 }
+
+export async function matchTracks({ tracks }: { tracks: SpotifyApi.TrackObjectFull[] }) {
+  try {
+    const beatSaver = new BeatSaverClient();
+    // TODO: handle rate limit
+    return await beatSaver.searchInBatches(tracks);
+  } catch (err) {
+    console.error(err);
+  }
+
+  return null;
+}

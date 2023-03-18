@@ -2,10 +2,12 @@ import { procedure, router } from '@/server/trpc';
 import {
   createOrUpdateSpotifyUser,
   deleteSpotifyUser,
+  getPlaylistTracks,
   getPlaylists,
   getSpotifyUser,
   spotifyApi,
 } from '@/utils/spotify';
+import z from 'zod';
 
 export const spotifyRouter = router({
   get: procedure.query(async ({ ctx: { session, res } }) => {
@@ -57,6 +59,7 @@ export const spotifyRouter = router({
     if (typeof code !== 'string' || typeof state !== 'string') {
       return res.status(400).json({ error: 'Invalid query parameters' });
     }
+    // TODO: validate state
 
     const { body, statusCode } = await spotifyApi.authorizationCodeGrant(code);
     if (statusCode === 200) {
@@ -79,6 +82,22 @@ export const spotifyRouter = router({
       return res.status(401).json({ error: 'Unauthenticated' });
     }
 
+    // TODO: implement pagination
     return getPlaylists(session.user.userId);
   }),
+  playlist: procedure
+    .input(
+      z.object({
+        playlistId: z.string(),
+      })
+    )
+    .query(async ({ input, ctx: { session, res } }) => {
+      if (!session) {
+        return res.status(401).json({ error: 'Unauthenticated' });
+      }
+      const { playlistId } = input;
+
+      // TODO: implement pagination
+      return getPlaylistTracks(session.user.userId, playlistId);
+    }),
 });

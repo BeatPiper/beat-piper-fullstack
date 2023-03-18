@@ -94,3 +94,35 @@ export async function getPlaylists(userId: User['id']) {
     return playlists;
   }
 }
+
+type PlaylistTrackObjectPresent = SpotifyApi.PlaylistTrackObject & {
+  track: NonNullable<SpotifyApi.PlaylistTrackObject['track']>;
+  is_local: false;
+};
+
+export async function getPlaylistTracks(userId: User['id'], playlistId: string) {
+  await grantSpotify(userId);
+
+  const playlistTracks = await spotifyApi.getPlaylistTracks(playlistId, {
+    limit: SPOTIFY_PAGINATION_LIMIT,
+  });
+
+  if (playlistTracks.statusCode === 200) {
+    const start = playlistTracks.body;
+    const tracks = start.items;
+
+    let offset = SPOTIFY_PAGINATION_LIMIT;
+    while (tracks.length < start.total) {
+      tracks.push(
+        ...(await spotifyApi.getPlaylistTracks(playlistId, { offset, limit: SPOTIFY_PAGINATION_LIMIT }))
+          .body.items
+      );
+      offset += SPOTIFY_PAGINATION_LIMIT;
+    }
+
+    // filter local tracks
+    return tracks.filter(
+      (track): track is PlaylistTrackObjectPresent => track.track !== null && !track.is_local
+    );
+  }
+}
