@@ -1,8 +1,22 @@
 import { trpc } from '@/utils/trpc';
 import Head from 'next/head';
-import { Anchor, Avatar, Button, Group, Image, Loader, Stack, Table, Text, Title } from '@mantine/core';
-import { IconMusic, IconTestPipe, IconUser, IconHome } from '@tabler/icons-react';
+import {
+  Anchor,
+  Avatar,
+  Button,
+  Card,
+  Checkbox,
+  Group,
+  Image,
+  Loader,
+  Stack,
+  Table,
+  Text,
+  Title,
+} from '@mantine/core';
+import { IconMusic, IconTestPipe, IconUser, IconHome, IconUserCog } from '@tabler/icons-react';
 import Link from 'next/link';
+import { useMemo, useState } from 'react';
 
 function Playlists() {
   return (
@@ -10,23 +24,25 @@ function Playlists() {
       <Head>
         <title>Playlists</title>
       </Head>
-      <Stack>
-        <Group grow>
-          <Button component={Link} href="/" leftIcon={<IconHome />} color="gray">
-            Home
-          </Button>
-        </Group>
-        <PlaylistTable />
-      </Stack>
+      <PlaylistTable />
     </>
   );
 }
 
 function PlaylistTable() {
+  const [onlyOwn, setOnlyOwn] = useState(false);
+
   const { isLoading, isError, data, error } = trpc.spotify.playlists.useQuery(undefined, {
     retry: false,
     refetchOnWindowFocus: false,
   });
+
+  const myPlaylists = useMemo(() => {
+    if (!data) {
+      return [];
+    }
+    return data.playlists.filter(playlist => playlist.owner.id === data.spotifyUser.spotifyId);
+  }, [data]);
 
   if (isLoading) {
     return (
@@ -46,57 +62,78 @@ function PlaylistTable() {
     );
   }
 
+  const playlistRows = (playlists: SpotifyApi.PlaylistObjectSimplified[]) =>
+    playlists.map(playlist => (
+      <tr key={playlist.id}>
+        <td>
+          <Group>
+            {playlist.images && playlist.images.length ? (
+              <Avatar src={playlist.images[0].url} alt="Playlist image" />
+            ) : (
+              <Avatar alt="Playlist image">
+                <IconMusic />
+              </Avatar>
+            )}
+            <Text>{playlist.name}</Text>
+          </Group>
+        </td>
+        <td>
+          <Anchor href={playlist.owner.uri}>
+            <Group>
+              {playlist.owner.images && playlist.owner.images.length ? (
+                <Avatar src={playlist.owner.images[0].url} alt="User image" />
+              ) : (
+                <Avatar alt={playlist.name}>
+                  <IconUser />
+                </Avatar>
+              )}
+              <Text>{playlist.owner.display_name}</Text>
+            </Group>
+          </Anchor>
+        </td>
+        <td>
+          <Text>{playlist.tracks.total}</Text>
+        </td>
+        <td>
+          <Button component={Link} href={`/playlist/${playlist.id}`} leftIcon={<IconTestPipe />}>
+            Start piping
+          </Button>
+        </td>
+      </tr>
+    ));
+
   return (
-    <Table>
-      <thead>
-        <tr>
-          <th>Playlist</th>
-          <th>Author</th>
-          <th>Tracks</th>
-          <th>Select</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.map(playlist => (
-          <tr key={playlist.id}>
-            <td>
-              <Group>
-                {playlist.images && playlist.images.length ? (
-                  <Avatar src={playlist.images[0].url} alt="Playlist image" />
-                ) : (
-                  <Avatar alt="Playlist image">
-                    <IconMusic />
-                  </Avatar>
-                )}
-                <Text>{playlist.name}</Text>
+    <Stack>
+      <Group grow>
+        <Button component={Link} href="/" leftIcon={<IconHome />} color="gray">
+          Home
+        </Button>
+      </Group>
+      <Group position="center">
+        <Card radius="md">
+          <Checkbox
+            checked={onlyOwn}
+            onChange={event => setOnlyOwn(event.currentTarget.checked)}
+            label={
+              <Group align="center">
+                <IconUserCog /> Only show playlists created by me
               </Group>
-            </td>
-            <td>
-              <Anchor href={playlist.owner.uri}>
-                <Group>
-                  {playlist.owner.images && playlist.owner.images.length ? (
-                    <Avatar src={playlist.owner.images[0].url} alt="User image" />
-                  ) : (
-                    <Avatar alt={playlist.name}>
-                      <IconUser />
-                    </Avatar>
-                  )}
-                  <Text>{playlist.owner.display_name}</Text>
-                </Group>
-              </Anchor>
-            </td>
-            <td>
-              <Text>{playlist.tracks.total}</Text>
-            </td>
-            <td>
-              <Button component={Link} href={`/playlist/${playlist.id}`} leftIcon={<IconTestPipe />}>
-                Start piping
-              </Button>
-            </td>
+            }
+          />
+        </Card>
+      </Group>
+      <Table>
+        <thead>
+          <tr>
+            <th>Playlist</th>
+            <th>Author</th>
+            <th>Tracks</th>
+            <th>Select</th>
           </tr>
-        ))}
-      </tbody>
-    </Table>
+        </thead>
+        <tbody>{playlistRows(onlyOwn ? myPlaylists : data.playlists)}</tbody>
+      </Table>
+    </Stack>
   );
 }
 

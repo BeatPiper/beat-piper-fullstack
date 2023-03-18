@@ -54,7 +54,10 @@ export async function grantSpotify(userId: User['id']) {
     const refreshedUser = await refreshSpotifyUser(spotifyUser);
     spotifyApi.setAccessToken(refreshedUser.accessToken);
     spotifyApi.setRefreshToken(refreshedUser.refreshToken);
+    return refreshedUser;
   }
+
+  return spotifyUser;
 }
 
 export async function refreshSpotifyUser(spotifyUser: SpotifyUser) {
@@ -77,7 +80,7 @@ export async function deleteSpotifyUser(userId: User['id']) {
 }
 
 export async function getPlaylists(userId: User['id']) {
-  await grantSpotify(userId);
+  const spotifyUser = await grantSpotify(userId);
 
   const playlistsResponse = await spotifyApi.getUserPlaylists({ limit: SPOTIFY_PAGINATION_LIMIT });
 
@@ -93,7 +96,7 @@ export async function getPlaylists(userId: User['id']) {
       offset += SPOTIFY_PAGINATION_LIMIT;
     }
 
-    return playlists;
+    return { playlists, spotifyUser };
   }
 }
 
