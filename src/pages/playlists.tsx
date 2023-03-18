@@ -1,6 +1,6 @@
 import { trpc } from '@/utils/trpc';
 import Head from 'next/head';
-import { Anchor, Avatar, Button, Group, Loader, Stack, Table, Text } from '@mantine/core';
+import { Anchor, Avatar, Button, Group, Image, Loader, Stack, Table, Text, Title } from '@mantine/core';
 import { IconMusic, IconTestPipe, IconUser, IconHome } from '@tabler/icons-react';
 import Link from 'next/link';
 
@@ -30,9 +30,11 @@ function PlaylistTable() {
 
   if (isLoading) {
     return (
-      <Group position="center">
-        <Loader size="xl" />
-      </Group>
+      <Stack align="center">
+        <Image src="/logo.png" height={250} fit="contain" alt="Logo" />
+        <Title>Getting your saved playlists...</Title>
+        <Loader size="xl" mt="xl" />
+      </Stack>
     );
   }
 
