@@ -40,8 +40,9 @@ import {
 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { matchTracks } from '@/utils/beatsaver';
+import { createPlaylist, matchTracks } from '@/utils/beatsaver';
 import { useListState } from '@mantine/hooks';
+import { MapDetail } from 'beatsaver-api/lib/models/MapDetail';
 
 const useStyles = createStyles(theme => ({
   header: {
@@ -187,6 +188,35 @@ function PlaylistTable() {
     );
   }
 
+  const handleCreatePlaylist = async () => {
+    const { details } = data;
+
+    if (details) {
+      const availableMaps = matchedTracks.map(({ maps }) => maps).flat();
+      const maps = selectedMaps
+        .map(x => availableMaps.find(y => y.id === x))
+        .filter((x): x is MapDetail => x !== undefined);
+      const playlist = await createPlaylist(
+        details.name,
+        details.description || `Playlist created by ${details.owner.display_name}`,
+        details.images.length ? details.images[0].url : '',
+        maps
+      );
+      const playlistJson = JSON.stringify(playlist, null, 4);
+
+      // download as file
+      const blob = new Blob([playlistJson], { type: 'application/json' });
+      const downloadUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.setAttribute('download', 'playlist.bplist');
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(downloadUrl);
+    }
+  };
+
   return (
     <Stack>
       <Group grow>
@@ -196,7 +226,12 @@ function PlaylistTable() {
         <Button type="submit" leftIcon={<IconArchive />} disabled={!selectedMaps.length}>
           Download as archive (.zip)
         </Button>
-        <Button type="submit" leftIcon={<IconListDetails />} disabled={!selectedMaps.length}>
+        <Button
+          type="submit"
+          onClick={handleCreatePlaylist}
+          leftIcon={<IconListDetails />}
+          disabled={!selectedMaps.length}
+        >
           Download as playlist (.bplist)
         </Button>
       </Group>

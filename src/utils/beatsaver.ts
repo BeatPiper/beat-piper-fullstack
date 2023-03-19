@@ -3,9 +3,27 @@ import { MapDetail } from 'beatsaver-api/lib/models/MapDetail';
 import { MapVersion } from 'beatsaver-api/lib/models/MapVersion';
 import { SortOrder } from 'beatsaver-api/lib/api/search';
 
+export type Maps = MapDetail[];
+
 interface TrackWithMaps {
   track: SpotifyApi.TrackObjectFull;
-  maps: MapDetail[];
+  maps: Maps;
+}
+
+interface BeatSaberPlaylist {
+  playlistTitle: string;
+  playlistAuthor: string;
+  playlistDescription: string;
+  syncURL?: string;
+  image: string | null;
+  songs: BeatSaberPlaylistSong[];
+}
+
+interface BeatSaberPlaylistSong {
+  uploader: string;
+  name: string;
+  key: string;
+  hash: string;
 }
 
 const BEATSAVER_CHUNKS = Number(process.env.BEATSAVER_CHUNKS) || 10;
@@ -48,7 +66,7 @@ export default class BeatSaverClient {
     const results = await this.api.searchMaps({
       q: `${track.name} ${track.artists[0].name}`, // TODO: is this query good
       sortOrder: SortOrder.Relevance,
-    });
+    }); // TODO: also get the following pages?
     return {
       track,
       maps: results.docs.filter(map => map.name.toLowerCase().includes(track.name.toLowerCase())), // TODO: maybe use Levenshtein distance
@@ -66,4 +84,36 @@ export async function matchTracks({ tracks }: { tracks: SpotifyApi.TrackObjectFu
   }
 
   return null;
+}
+
+export async function createPlaylist(
+  playlistTitle: string,
+  playlistDescription: string,
+  imageUrl: string,
+  maps: Maps
+): Promise<BeatSaberPlaylist> {
+  const songs = maps.map(map => ({
+    key: map.id,
+    hash: BeatSaverClient.getLatestVersion(map).hash,
+    name: map.name,
+    uploader: map.uploader.name,
+  }));
+
+  let image: string | null = null;
+  // TODO: implement downloading playlist image
+  /*if (imageUrl) {
+    const buffer = await download(imageUrl);
+    const fileType = await fileTypeFromBuffer(buffer);
+    if (fileType) {
+      image = `data:${fileType.mime};base64,${buffer.toString('base64')}`;
+    }
+  }*/
+
+  return {
+    playlistTitle,
+    playlistDescription,
+    playlistAuthor: 'Beat Piper',
+    songs,
+    image,
+  };
 }
