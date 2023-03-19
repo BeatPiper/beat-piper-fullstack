@@ -131,3 +131,13 @@ export async function getPlaylistTracks(userId: User['id'], playlistId: string) 
     );
   }
 }
+
+export async function getPlaylistDetails(userId: User['id'], playlistId: string) {
+  await grantSpotify(userId);
+
+  const playlistDetails = await spotifyApi.getPlaylist(playlistId);
+
+  if (playlistDetails.statusCode === 200) {
+    return playlistDetails.body;
+  }
+}

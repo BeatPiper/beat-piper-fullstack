@@ -93,8 +93,8 @@ function PlaylistTable() {
   useEffect(() => {
     (async () => {
       setMatchedTracks(null);
-      if (data) {
-        const tracks = data.map(x => x.track);
+      if (data && data.tracks) {
+        const tracks = data.tracks.map(x => x.track);
         const matched = await matchTracks({ tracks });
         setMatchedTracks(matched);
       }

@@ -6,6 +6,7 @@ import {
   getPlaylists,
   getSpotifyUser,
   spotifyApi,
+  getPlaylistDetails,
 } from '@/utils/spotify';
 import z from 'zod';
 
@@ -107,6 +108,9 @@ export const spotifyRouter = router({
       const { playlistId } = input;
 
       // TODO: implement pagination
-      return getPlaylistTracks(session.user.userId, playlistId);
+      const tracks = await getPlaylistTracks(session.user.userId, playlistId);
+      const details = await getPlaylistDetails(session.user.userId, playlistId);
+
+      return { tracks, details };
     }),
 });
