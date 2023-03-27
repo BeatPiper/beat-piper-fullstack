@@ -21,13 +21,15 @@ function HomeLoggedIn() {
 }
 
 function StartButtons({ session }: { session: Session }) {
-  const { isLoading, isError, data, error, refetch } = trpc.spotify.get.useQuery(undefined, {
+  const { isLoading, isError, data, error, remove } = trpc.spotify.get.useQuery(undefined, {
     retry: false,
     refetchOnWindowFocus: false,
     enabled: session.user !== undefined,
   });
 
-  const logout = trpc.spotify.logout.useMutation();
+  const logout = trpc.spotify.logout.useMutation({
+    onMutate: remove,
+  });
 
   if (isLoading) {
     return <Loader variant="dots" />;
@@ -53,14 +55,7 @@ function StartButtons({ session }: { session: Session }) {
         </Button>
       )}
       {data ? (
-        <Button
-          onClick={async () => {
-            await logout.mutateAsync();
-            await refetch();
-          }}
-          color="green"
-          leftIcon={<IconBrandSpotify />}
-        >
+        <Button onClick={() => logout.mutate()} color="green" leftIcon={<IconBrandSpotify />}>
           Log out Spotify
         </Button>
       ) : (
