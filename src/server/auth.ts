@@ -1,9 +1,10 @@
-import { NextAuthOptions } from 'next-auth';
+import { getServerSession, type NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { verify } from 'argon2';
 
 import { prisma } from '@/server/prisma';
 import z from 'zod';
+import type { GetServerSidePropsContext } from 'next';
 
 export const userSchema = z.object({
   email: z.string().email(),
@@ -76,4 +77,16 @@ export const nextAuthOptions: NextAuthOptions = {
     signIn: '/log-in',
     newUser: '/sign-up',
   },
+};
+
+/**
+ * Wrapper for `getServerSession` so that you don't need to import the `authOptions` in every file.
+ *
+ * @see https://next-auth.js.org/configuration/nextjs
+ */
+export const getServerAuthSession = (ctx: {
+  req: GetServerSidePropsContext['req'];
+  res: GetServerSidePropsContext['res'];
+}) => {
+  return getServerSession(ctx.req, ctx.res, nextAuthOptions);
 };

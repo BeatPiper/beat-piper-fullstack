@@ -1,9 +1,41 @@
 import { initTRPC, TRPCError } from '@trpc/server';
-import { IContext } from '@/server/context';
+import { CreateNextContextOptions } from '@trpc/server/adapters/next';
+import { getServerAuthSession } from '@/server/auth';
+import { prisma } from '@/server/prisma';
 
-const t = initTRPC.context<IContext>().create();
+/**
+ * This is the actual context you will use in your router. It will be used to process every request
+ * that goes through your tRPC endpoint.
+ *
+ * @see https://trpc.io/docs/context
+ */
+export async function createContext({ req, res }: CreateNextContextOptions) {
+  const session = await getServerAuthSession({ req, res });
 
+  return {
+    req,
+    res,
+    session,
+    prisma,
+  };
+}
+
+const t = initTRPC.context<typeof createContext>().create();
+
+/**
+ * This is how you create new routers and sub-routers in your tRPC API.
+ *
+ * @see https://trpc.io/docs/router
+ */
 export const router = t.router;
+
+/**
+ * Public (unauthenticated) procedure
+ *
+ * This is the base piece you use to build new queries and mutations on your tRPC API. It does not
+ * guarantee that a user querying is authorized, but you can still access user session data if they
+ * are logged in.
+ */
 export const procedure = t.procedure;
 
 /** Reusable middleware that enforces users are logged in before running the procedure. */
