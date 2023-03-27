@@ -3,6 +3,7 @@ import { User } from 'next-auth';
 import { prisma } from '@/server/prisma';
 import { SpotifyUser } from '@prisma/client';
 import { env } from '@/env.mjs';
+import { TRPCError } from '@trpc/server';
 
 export const spotifyApi = new SpotifyWebApi({
   clientId: env.SPOTIFY_CLIENT_ID,
@@ -45,7 +46,7 @@ export async function createOrUpdateSpotifyUser({
 export async function grantSpotify(userId: User['id']) {
   const spotifyUser = await getSpotifyUser(userId);
   if (!spotifyUser) {
-    throw new Error('Spotify user not found');
+    throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Spotify user not found' });
   }
 
   spotifyApi.setAccessToken(spotifyUser.accessToken);
@@ -86,7 +87,10 @@ export async function getPlaylists(userId: User['id']) {
   const playlistsResponse = await spotifyApi.getUserPlaylists({ limit: SPOTIFY_PAGINATION_LIMIT });
 
   if (playlistsResponse.statusCode !== 200) {
-    throw new Error(`Spotify returned ${playlistsResponse.statusCode}`);
+    throw new TRPCError({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: `Spotify returned ${playlistsResponse.statusCode}`,
+    });
   }
 
   const start = playlistsResponse.body;
@@ -116,7 +120,10 @@ export async function getPlaylistTracks(userId: User['id'], playlistId: string) 
   });
 
   if (playlistTracks.statusCode !== 200) {
-    throw new Error(`Spotify returned ${playlistTracks.statusCode}`);
+    throw new TRPCError({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: `Spotify returned ${playlistTracks.statusCode}`,
+    });
   }
 
   const start = playlistTracks.body;
@@ -143,7 +150,10 @@ export async function getPlaylistDetails(userId: User['id'], playlistId: string)
   const playlistDetails = await spotifyApi.getPlaylist(playlistId);
 
   if (playlistDetails.statusCode !== 200) {
-    throw new Error(`Spotify returned ${playlistDetails.statusCode}`);
+    throw new TRPCError({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: `Spotify returned ${playlistDetails.statusCode}`,
+    });
   }
 
   return playlistDetails.body;
