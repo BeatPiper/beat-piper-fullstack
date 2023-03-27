@@ -1,13 +1,13 @@
 import { TRPCError } from '@trpc/server';
 import { hash } from 'argon2';
 
-import { procedure, router } from '../trpc';
+import { publicProcedure, router } from '../trpc';
 import { spotifyRouter } from '@/server/routers/spotify';
 import { userSchema } from '@/server/auth';
 
 export const appRouter = router({
   spotify: spotifyRouter,
-  signup: procedure.input(userSchema).mutation(async ({ input, ctx }) => {
+  signup: publicProcedure.input(userSchema).mutation(async ({ input, ctx }) => {
     const { email, password } = input;
 
     const exists = await ctx.prisma.user.findFirst({
