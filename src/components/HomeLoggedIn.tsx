@@ -11,6 +11,7 @@ function HomeLoggedIn() {
   const spotifyQuery = trpc.spotify.get.useQuery(undefined, {
     retry: false,
     refetchOnWindowFocus: false,
+    enabled: session?.user !== undefined,
   });
 
   if (status !== 'authenticated') {
