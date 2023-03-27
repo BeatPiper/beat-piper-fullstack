@@ -2,11 +2,12 @@ import SpotifyWebApi from 'spotify-web-api-node';
 import { User } from 'next-auth';
 import { prisma } from '@/common/prisma';
 import { SpotifyUser } from '@prisma/client';
+import { env } from '@/env.mjs';
 
 export const spotifyApi = new SpotifyWebApi({
-  clientId: process.env.SPOTIFY_CLIENT_ID,
-  clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-  redirectUri: `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/trpc/spotify.callback`,
+  clientId: env.SPOTIFY_CLIENT_ID,
+  clientSecret: env.SPOTIFY_CLIENT_SECRET,
+  redirectUri: `${env.NEXTAUTH_URL || 'http://localhost:3000'}/api/trpc/spotify.callback`,
 });
 
 const SPOTIFY_PAGINATION_LIMIT = 50;
