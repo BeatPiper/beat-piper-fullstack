@@ -18,7 +18,7 @@ function HomeLoggedIn() {
   }
 
   return (
-    <Stack>
+    <Stack align="center">
       <Title order={2}>Hi {session.user.email}, thank you for using Beat Piper</Title>
       {spotifyQuery.isSuccess && (
         <Group>
