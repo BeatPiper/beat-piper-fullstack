@@ -2465,6 +2465,11 @@ next-auth@^4.20.1:
     preact-render-to-string "^5.1.19"
     uuid "^8.3.2"
 
+next-plausible@^3.7.2:
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/next-plausible/-/next-plausible-3.7.2.tgz#33eae204a00ad01b7851b319e115eab8e0815fa6"
+  integrity sha512-9PqFiVtD1kZO5gHFYTcgilHhg2WhMzD6I4NK/RUh9DGavD1N11IhNAvyGLFmvB3f4FtHC9IoAsauYDtQBt+riA==
+
 next@^13.2.4:
   version "13.2.4"
   resolved "https://registry.yarnpkg.com/next/-/next-13.2.4.tgz#2363330392b0f7da02ab41301f60857ffa7f67d6"
