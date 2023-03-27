@@ -8,26 +8,30 @@ import Link from 'next/link';
 function AuthButtons() {
   const session = useSession();
   const router = useRouter();
-  const auth = useMemo(() => {
+  const isOnAuthRoute = useMemo(() => {
     return router.pathname === '/sign-up' || router.pathname === '/log-in';
   }, [router.pathname]);
 
-  return session.status === 'authenticated' ? (
-    <Button onClick={() => signOut({ redirect: false })} leftIcon={<IconLogout />}>
-      Logout
-    </Button>
-  ) : (
+  if (session.status === 'authenticated') {
+    return (
+      <Button onClick={() => signOut({ redirect: false })} leftIcon={<IconLogout />}>
+        Logout
+      </Button>
+    );
+  }
+
+  if (isOnAuthRoute) {
+    return null;
+  }
+
+  return (
     <Group noWrap>
-      {!auth && (
-        <>
-          <Button component={Link} href="/sign-up" leftIcon={<IconUserPlus />}>
-            Sign up
-          </Button>
-          <Button component={Link} href="/log-in" leftIcon={<IconLogin />}>
-            Log In
-          </Button>
-        </>
-      )}
+      <Button component={Link} href="/sign-up" leftIcon={<IconUserPlus />}>
+        Sign up
+      </Button>
+      <Button component={Link} href="/log-in" leftIcon={<IconLogin />}>
+        Log In
+      </Button>
     </Group>
   );
 }
