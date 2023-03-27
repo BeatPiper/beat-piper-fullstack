@@ -2,8 +2,8 @@ import { TRPCError } from '@trpc/server';
 import { hash } from 'argon2';
 
 import { procedure, router } from '../trpc';
-import { userSchema } from '@/common/validation/auth';
 import { spotifyRouter } from '@/server/routers/spotify';
+import { userSchema } from '@/server/auth';
 
 export const appRouter = router({
   spotify: spotifyRouter,

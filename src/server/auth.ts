@@ -2,8 +2,14 @@ import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { verify } from 'argon2';
 
-import { prisma } from './prisma';
-import { userSchema } from './validation/auth';
+import { prisma } from '@/server/prisma';
+import z from 'zod';
+
+export const userSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(16).max(256),
+});
+export type IUser = z.infer<typeof userSchema>;
 
 export const nextAuthOptions: NextAuthOptions = {
   providers: [

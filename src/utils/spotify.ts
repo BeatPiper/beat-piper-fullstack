@@ -1,6 +1,6 @@
 import SpotifyWebApi from 'spotify-web-api-node';
 import { User } from 'next-auth';
-import { prisma } from '@/common/prisma';
+import { prisma } from '@/server/prisma';
 import { SpotifyUser } from '@prisma/client';
 import { env } from '@/env.mjs';
 

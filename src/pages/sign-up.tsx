@@ -14,12 +14,12 @@ import {
 } from '@mantine/core';
 import { IconArrowBigRight, IconBrandGoogle } from '@tabler/icons-react';
 import { useForm, zodResolver } from '@mantine/form';
-import { IUser, userSchema } from '@/common/validation/auth';
 import Link from 'next/link';
 import { useCallback } from 'react';
 import { trpc } from '@/utils/trpc';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import { IUser, userSchema } from '@/server/auth';
 
 function SignUp() {
   const router = useRouter();
