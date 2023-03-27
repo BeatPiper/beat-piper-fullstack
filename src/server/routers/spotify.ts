@@ -1,4 +1,4 @@
-import { procedure, router } from '@/server/trpc';
+import { protectedProcedure, router } from '@/server/trpc';
 import {
   createOrUpdateSpotifyUser,
   deleteSpotifyUser,
@@ -11,21 +11,14 @@ import {
 import z from 'zod';
 
 export const spotifyRouter = router({
-  get: procedure.query(async ({ ctx: { session, res } }) => {
-    if (!session) {
-      return res.status(401).json({ error: 'Unauthenticated' });
-    }
+  get: protectedProcedure.query(async ({ ctx: { session } }) => {
     const {
       user: { userId },
     } = session;
 
     return await getSpotifyUser(userId);
   }),
-  auth: procedure.query(async ({ ctx: { session, res } }) => {
-    if (!session) {
-      return res.status(401).json({ error: 'Unauthenticated' });
-    }
-
+  auth: protectedProcedure.query(async ({ ctx: { res } }) => {
     // required Spotify API scopes to read playlists
     const scopes = ['playlist-read-private', 'playlist-read-collaborative'];
     // generate a random string for the state
@@ -33,10 +26,7 @@ export const spotifyRouter = router({
 
     return res.redirect(spotifyApi.createAuthorizeURL(scopes, state, true));
   }),
-  logout: procedure.mutation(async ({ ctx: { session, res } }) => {
-    if (!session) {
-      return res.status(401).json({ error: 'Unauthenticated' });
-    }
+  logout: protectedProcedure.mutation(async ({ ctx: { session } }) => {
     const {
       user: { userId },
     } = session;
@@ -48,10 +38,7 @@ export const spotifyRouter = router({
       return { status: 200, message: 'Spotify not connected' };
     }
   }),
-  callback: procedure.query(async ({ ctx: { session, req, res } }) => {
-    if (!session) {
-      return res.status(401).json({ error: 'Unauthenticated' });
-    }
+  callback: protectedProcedure.query(async ({ ctx: { session, req, res } }) => {
     const {
       user: { userId },
     } = session;
@@ -87,24 +74,17 @@ export const spotifyRouter = router({
       return res.status(500).json({ error: `Spotify returned ${statusCode}` });
     }
   }),
-  playlists: procedure.query(async ({ ctx: { session, res } }) => {
-    if (!session) {
-      return res.status(401).json({ error: 'Unauthenticated' });
-    }
-
+  playlists: protectedProcedure.query(async ({ ctx: { session } }) => {
     // TODO: implement pagination
     return getPlaylists(session.user.userId);
   }),
-  playlist: procedure
+  playlist: protectedProcedure
     .input(
       z.object({
         playlistId: z.string(),
       })
     )
-    .query(async ({ input, ctx: { session, res } }) => {
-      if (!session) {
-        return res.status(401).json({ error: 'Unauthenticated' });
-      }
+    .query(async ({ input, ctx: { session } }) => {
       const { playlistId } = input;
 
       // TODO: implement pagination
