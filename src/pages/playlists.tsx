@@ -17,6 +17,7 @@ import {
 import { IconMusic, IconTestPipe, IconUser, IconHome, IconUserCog } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
+import NextImage from 'next/image';
 
 function Playlists() {
   return (
@@ -68,7 +69,7 @@ function PlaylistTable() {
         <td>
           <Group>
             {playlist.images && playlist.images.length ? (
-              <Avatar src={playlist.images[0].url} alt="Playlist image" />
+              <NextImage src={playlist.images[0].url} alt="Playlist image" width={38} height={38} />
             ) : (
               <Avatar alt="Playlist image">
                 <IconMusic />

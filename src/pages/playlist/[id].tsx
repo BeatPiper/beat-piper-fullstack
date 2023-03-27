@@ -43,6 +43,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { createPlaylist, matchTracks } from '@/utils/beatsaver';
 import { useListState } from '@mantine/hooks';
 import { MapDetail } from 'beatsaver-api/lib/models/MapDetail';
+import NextImage from 'next/image';
 
 const useStyles = createStyles(theme => ({
   header: {
@@ -319,7 +320,12 @@ function PlaylistTable() {
                 <td>
                   <Group>
                     {track.album.images && track.album.images.length ? (
-                      <Avatar src={track.album.images[0].url} alt="Track image" />
+                      <NextImage
+                        src={track.album.images[0].url}
+                        alt="Track image"
+                        width={38}
+                        height={38}
+                      />
                     ) : (
                       <Avatar alt="Track image">
                         <IconMusic />
