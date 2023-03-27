@@ -136,26 +136,31 @@ function PlaylistTable() {
 
   // Map selector queries
   const everyFirstChecked = useMemo(() => {
-    return (
-      matchedTracks?.every(({ maps }) => {
+    if (!matchedTracks) {
+      return false;
+    }
+    const shouldHaveCheckedIds = matchedTracks
+      .flatMap(({ maps }) => {
         if (maps.length) {
-          // first map has to be selected, others need to be unchecked
-          return maps.every((map, idx) =>
-            idx === 0 ? selectedMaps.includes(map.id) : !selectedMaps.includes(map.id)
-          );
+          return maps[0].id;
         }
+      })
+      .filter((id): id is string => id !== undefined);
 
-        return true;
-      }) ?? false
+    // return if selected maps have exactly the same ids as should have checked ids
+    return (
+      selectedMaps.length === shouldHaveCheckedIds.length &&
+      selectedMaps.every(id => shouldHaveCheckedIds.includes(id))
     );
   }, [matchedTracks, selectedMaps]);
 
   const allChecked = useMemo(() => {
-    return (
-      matchedTracks?.every(({ maps }) => {
-        return maps.every(map => selectedMaps.includes(map.id));
-      }) ?? false
-    );
+    if (!matchedTracks) {
+      return false;
+    }
+    return matchedTracks.every(({ maps }) => {
+      return maps.every(map => selectedMaps.includes(map.id));
+    });
   }, [matchedTracks, selectedMaps]);
 
   const noneChecked = useMemo(() => !selectedMaps.length, [selectedMaps]);
