@@ -1,24 +1,26 @@
 # Beat Piper
 
-Stack:
+## Tech Stack
 
-- Next.js
-- Prisma
-- ESLint
-- Prettier
-- NextAuth
-- tRPC
-- Zod
-- Mantine
+This project makes use of the following technologies:
+
+- [Next.js](https://nextjs.org/)
+- [Prisma](https://www.prisma.io/)
+- [ESLint](https://eslint.org/)
+- [Prettier](https://prettier.io/)
+- [NextAuth](https://next-auth.js.org/)
+- [tRPC](https://trpc.io/)
+- [Zod](https://zod.dev/)
+- [Mantine](https://mantine.dev/)
+
+The stack is heavily inspired by [t3](https://create.t3.gg/).
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+yarn
+docker-compose up -d
 yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
