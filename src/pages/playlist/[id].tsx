@@ -85,6 +85,7 @@ function PlaylistTable() {
     {
       retry: false,
       refetchOnWindowFocus: false,
+      enabled: !!id,
     }
   );
 
