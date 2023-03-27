@@ -3,7 +3,7 @@ import { hash } from 'argon2';
 
 import { publicProcedure, router } from '../trpc';
 import { spotifyRouter } from '@/server/routers/spotify';
-import { userSchema } from '@/server/auth';
+import { userSchema } from '@/utils/validation/auth';
 
 export const appRouter = router({
   spotify: spotifyRouter,

@@ -19,7 +19,7 @@ import { useCallback } from 'react';
 import { trpc } from '@/utils/trpc';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { IUser, userSchema } from '@/server/auth';
+import { IUser, userSchema } from '@/utils/validation/auth';
 
 function SignUp() {
   const router = useRouter();
