@@ -1,18 +1,12 @@
-import { Button, Group, Stack, Title } from '@mantine/core';
+import { Button, Group, Loader, Stack, Text, Title } from '@mantine/core';
 import { useSession } from 'next-auth/react';
 import { trpc } from '@/utils/trpc';
 import Link from 'next/link';
-import { IconPlayerPlay } from '@tabler/icons-react';
-import SpotifyLogin from '@/components/SpotifyLogin';
+import { IconBrandSpotify, IconPlayerPlay } from '@tabler/icons-react';
+import { Session } from 'next-auth';
 
 function HomeLoggedIn() {
   const { data: session, status } = useSession();
-
-  const spotifyQuery = trpc.spotify.get.useQuery(undefined, {
-    retry: false,
-    refetchOnWindowFocus: false,
-    enabled: session?.user !== undefined,
-  });
 
   if (status !== 'authenticated') {
     return null;
@@ -21,21 +15,65 @@ function HomeLoggedIn() {
   return (
     <Stack align="center">
       <Title order={2}>Hi {session.user.email}, thank you for using Beat Piper</Title>
-      {spotifyQuery.isSuccess && (
-        <Group>
-          {spotifyQuery.data ? (
-            <Button component={Link} href="/playlists" leftIcon={<IconPlayerPlay />}>
-              Start Piping
-            </Button>
-          ) : (
-            <Button leftIcon={<IconPlayerPlay />} disabled>
-              Start Piping
-            </Button>
-          )}
-          <SpotifyLogin spotifyQuery={spotifyQuery} />
-        </Group>
-      )}
+      <StartButtons session={session} />
     </Stack>
+  );
+}
+
+function StartButtons({ session }: { session: Session }) {
+  const { isLoading, isError, data, error, refetch } = trpc.spotify.get.useQuery(undefined, {
+    retry: false,
+    refetchOnWindowFocus: false,
+    enabled: session.user !== undefined,
+  });
+
+  const logout = trpc.spotify.logout.useMutation();
+
+  if (isLoading) {
+    return <Loader variant="dots" />;
+  }
+
+  if (isError) {
+    return (
+      <Group position="center">
+        <Text>{error?.message}</Text>
+      </Group>
+    );
+  }
+
+  return (
+    <Group>
+      {data ? (
+        <Button component={Link} href="/playlists" leftIcon={<IconPlayerPlay />}>
+          Start Piping
+        </Button>
+      ) : (
+        <Button leftIcon={<IconPlayerPlay />} disabled>
+          Start Piping
+        </Button>
+      )}
+      {data ? (
+        <Button
+          onClick={async () => {
+            await logout.mutateAsync();
+            await refetch();
+          }}
+          color="green"
+          leftIcon={<IconBrandSpotify />}
+        >
+          Log out Spotify
+        </Button>
+      ) : (
+        <Button
+          component={Link}
+          href="/api/trpc/spotify.auth"
+          color="green"
+          leftIcon={<IconBrandSpotify />}
+        >
+          Login with Spotify
+        </Button>
+      )}
+    </Group>
   );
 }
 
