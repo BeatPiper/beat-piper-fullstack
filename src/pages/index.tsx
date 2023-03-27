@@ -1,19 +1,10 @@
 import Head from 'next/head';
-import { Image, Stack, Title, Text, useMantineTheme, Group, Button } from '@mantine/core';
 import { useSession } from 'next-auth/react';
-import { IconPlayerPlay } from '@tabler/icons-react';
-import Link from 'next/link';
-import SpotifyLogin from '@/components/SpotifyLogin';
-import { trpc } from '@/utils/trpc';
+import HomeLoggedIn from '@/components/HomeLoggedIn';
+import HomeLoggedOut from '@/components/HomeLoggedOut';
 
 function Home() {
-  const theme = useMantineTheme();
-  const { data: session, status } = useSession();
-
-  const spotifyQuery = trpc.spotify.get.useQuery(undefined, {
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
+  const { status } = useSession();
 
   return (
     <>
@@ -23,31 +14,7 @@ function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {status === 'authenticated' ? (
-        <Stack>
-          <Title order={2}>Hi {session.user.email}, thank you for using Beat Piper</Title>
-          {spotifyQuery.isSuccess && (
-            <Group>
-              {spotifyQuery.data ? (
-                <Button component={Link} href="/playlists" leftIcon={<IconPlayerPlay />}>
-                  Start Piping
-                </Button>
-              ) : (
-                <Button leftIcon={<IconPlayerPlay />} disabled>
-                  Start Piping
-                </Button>
-              )}
-              <SpotifyLogin spotifyQuery={spotifyQuery} />
-            </Group>
-          )}
-        </Stack>
-      ) : (
-        <Stack align="center">
-          <Image src="/logo.png" alt="Logo" height={250} fit="contain" />
-          <Title order={1}>Beat Piper</Title>
-          <Text color={theme.colors.gray[5]}>Play your Spotify collection in Beat Saber now!</Text>
-        </Stack>
-      )}
+      {status === 'authenticated' ? <HomeLoggedIn /> : <HomeLoggedOut />}
     </>
   );
 }
