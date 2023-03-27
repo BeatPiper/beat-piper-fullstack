@@ -2,6 +2,7 @@ import { initTRPC, TRPCError } from '@trpc/server';
 import { CreateNextContextOptions } from '@trpc/server/adapters/next';
 import { getServerAuthSession } from '@/server/auth';
 import { prisma } from '@/server/prisma';
+import superjson from 'superjson';
 
 /**
  * This is the actual context you will use in your router. It will be used to process every request
@@ -20,7 +21,9 @@ export async function createContext({ req, res }: CreateNextContextOptions) {
   };
 }
 
-const t = initTRPC.context<typeof createContext>().create();
+const t = initTRPC.context<typeof createContext>().create({
+  transformer: superjson,
+});
 
 /**
  * This is how you create new routers and sub-routers in your tRPC API.

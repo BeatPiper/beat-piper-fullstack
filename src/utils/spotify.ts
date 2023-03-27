@@ -85,20 +85,22 @@ export async function getPlaylists(userId: User['id']) {
 
   const playlistsResponse = await spotifyApi.getUserPlaylists({ limit: SPOTIFY_PAGINATION_LIMIT });
 
-  if (playlistsResponse.statusCode === 200) {
-    const start = playlistsResponse.body;
-    const playlists = start.items;
-
-    let offset = SPOTIFY_PAGINATION_LIMIT;
-    while (playlists.length < start.total) {
-      playlists.push(
-        ...(await spotifyApi.getUserPlaylists({ offset, limit: SPOTIFY_PAGINATION_LIMIT })).body.items
-      );
-      offset += SPOTIFY_PAGINATION_LIMIT;
-    }
-
-    return { playlists, spotifyUser };
+  if (playlistsResponse.statusCode !== 200) {
+    throw new Error(`Spotify returned ${playlistsResponse.statusCode}`);
   }
+
+  const start = playlistsResponse.body;
+  const playlists = start.items;
+
+  let offset = SPOTIFY_PAGINATION_LIMIT;
+  while (playlists.length < start.total) {
+    playlists.push(
+      ...(await spotifyApi.getUserPlaylists({ offset, limit: SPOTIFY_PAGINATION_LIMIT })).body.items
+    );
+    offset += SPOTIFY_PAGINATION_LIMIT;
+  }
+
+  return { playlists, spotifyUser };
 }
 
 type PlaylistTrackObjectPresent = SpotifyApi.PlaylistTrackObject & {
@@ -113,24 +115,26 @@ export async function getPlaylistTracks(userId: User['id'], playlistId: string) 
     limit: SPOTIFY_PAGINATION_LIMIT,
   });
 
-  if (playlistTracks.statusCode === 200) {
-    const start = playlistTracks.body;
-    const tracks = start.items;
-
-    let offset = SPOTIFY_PAGINATION_LIMIT;
-    while (tracks.length < start.total) {
-      tracks.push(
-        ...(await spotifyApi.getPlaylistTracks(playlistId, { offset, limit: SPOTIFY_PAGINATION_LIMIT }))
-          .body.items
-      );
-      offset += SPOTIFY_PAGINATION_LIMIT;
-    }
-
-    // filter local tracks
-    return tracks.filter(
-      (track): track is PlaylistTrackObjectPresent => track.track !== null && !track.is_local
-    );
+  if (playlistTracks.statusCode !== 200) {
+    throw new Error(`Spotify returned ${playlistTracks.statusCode}`);
   }
+
+  const start = playlistTracks.body;
+  const tracks = start.items;
+
+  let offset = SPOTIFY_PAGINATION_LIMIT;
+  while (tracks.length < start.total) {
+    tracks.push(
+      ...(await spotifyApi.getPlaylistTracks(playlistId, { offset, limit: SPOTIFY_PAGINATION_LIMIT }))
+        .body.items
+    );
+    offset += SPOTIFY_PAGINATION_LIMIT;
+  }
+
+  // filter local tracks
+  return tracks.filter(
+    (track): track is PlaylistTrackObjectPresent => track.track !== null && !track.is_local
+  );
 }
 
 export async function getPlaylistDetails(userId: User['id'], playlistId: string) {
@@ -138,7 +142,9 @@ export async function getPlaylistDetails(userId: User['id'], playlistId: string)
 
   const playlistDetails = await spotifyApi.getPlaylist(playlistId);
 
-  if (playlistDetails.statusCode === 200) {
-    return playlistDetails.body;
+  if (playlistDetails.statusCode !== 200) {
+    throw new Error(`Spotify returned ${playlistDetails.statusCode}`);
   }
+
+  return playlistDetails.body;
 }
