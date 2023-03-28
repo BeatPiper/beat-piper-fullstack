@@ -14,11 +14,14 @@ jobs:
       - name: 🛎️ Checkout
         uses: actions/checkout@v3
 
-      - name: 🧹 Install dependencies
+      - name: 🏗 Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
           cache: 'yarn'
+
+      - name: ⬇️ Install dependencies
+        run: yarn
 
       - name: 🚨 ESLint
         run: yarn lint
