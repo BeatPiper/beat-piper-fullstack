@@ -42,7 +42,7 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { createPlaylist, matchTracks } from '@/utils/beatsaver';
 import { useListState } from '@mantine/hooks';
-import { MapDetail } from 'beatsaver-api/lib/models/MapDetail';
+import { type MapDetail } from 'beatsaver-api/lib/models/MapDetail';
 import NextImage from 'next/image';
 
 const useStyles = createStyles(theme => ({

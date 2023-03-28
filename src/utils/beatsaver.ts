@@ -1,6 +1,6 @@
 import BeatSaverAPI from 'beatsaver-api';
-import { MapDetail } from 'beatsaver-api/lib/models/MapDetail';
-import { MapVersion } from 'beatsaver-api/lib/models/MapVersion';
+import { type MapDetail } from 'beatsaver-api/lib/models/MapDetail';
+import { type MapVersion } from 'beatsaver-api/lib/models/MapVersion';
 import { SortOrder } from 'beatsaver-api/lib/api/search';
 
 export type Maps = MapDetail[];

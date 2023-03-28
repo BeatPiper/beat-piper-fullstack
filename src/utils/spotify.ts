@@ -1,7 +1,7 @@
 import SpotifyWebApi from 'spotify-web-api-node';
-import { User } from 'next-auth';
+import { type User } from 'next-auth';
 import { prisma } from '@/server/prisma';
-import { SpotifyUser } from '@prisma/client';
+import { type SpotifyUser } from '@prisma/client';
 import { env } from '@/env.mjs';
 import { TRPCError } from '@trpc/server';
 

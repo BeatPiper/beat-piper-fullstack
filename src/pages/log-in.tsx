@@ -19,7 +19,7 @@ import { useCallback } from 'react';
 import Head from 'next/head';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { IUser, userSchema } from '@/utils/validation/auth';
+import { type IUser, userSchema } from '@/utils/validation/auth';
 
 function LogIn() {
   const router = useRouter();

@@ -1,7 +1,7 @@
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { AppShell, Group, Header, Image, MantineProvider, MediaQuery, Title } from '@mantine/core';
-import { Session } from 'next-auth';
+import { type Session } from 'next-auth';
 import { trpc } from '@/utils/trpc';
 import { SessionProvider } from 'next-auth/react';
 import Link from 'next/link';

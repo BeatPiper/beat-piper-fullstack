@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 import { trpc } from '@/utils/trpc';
 import Link from 'next/link';
 import { IconBrandSpotify, IconPlayerPlay } from '@tabler/icons-react';
-import { Session } from 'next-auth';
+import { type Session } from 'next-auth';
 
 function HomeLoggedIn() {
   const { data: session, status } = useSession();

@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server';
-import { CreateNextContextOptions } from '@trpc/server/adapters/next';
+import { type CreateNextContextOptions } from '@trpc/server/adapters/next';
 import { getServerAuthSession } from '@/server/auth';
 import { prisma } from '@/server/prisma';
 import superjson from 'superjson';

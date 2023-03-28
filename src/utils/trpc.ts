@@ -19,7 +19,7 @@ function getBaseUrl() {
 }
 
 export const trpc = createTRPCNext<AppRouter>({
-  config({ ctx }) {
+  config() {
     return {
       /**
        * Transformer used for data de-serialization from the server.
