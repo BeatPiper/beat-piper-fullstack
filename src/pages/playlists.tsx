@@ -1,23 +1,10 @@
 import { trpc } from '@/utils/trpc';
 import Head from 'next/head';
-import {
-  Anchor,
-  Avatar,
-  Button,
-  Card,
-  Checkbox,
-  Group,
-  Image,
-  Loader,
-  Stack,
-  Table,
-  Text,
-  Title,
-} from '@mantine/core';
-import { IconMusic, IconTestPipe, IconUser, IconHome, IconUserCog } from '@tabler/icons-react';
+import { Button, Card, Checkbox, Group, Image, Loader, Stack, Table, Text, Title } from '@mantine/core';
+import { IconHome, IconUserCog } from '@tabler/icons-react';
+import PlaylistRow from '@/components/PlaylistRow';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import NextImage from 'next/image';
 
 function Playlists() {
   return (
@@ -97,47 +84,7 @@ function PlaylistTable() {
         </thead>
         <tbody>
           {shownPlaylists.map(playlist => (
-            <tr key={playlist.id}>
-              <td>
-                <Group>
-                  {playlist.images && playlist.images.length ? (
-                    <NextImage
-                      src={playlist.images[0].url}
-                      alt="Playlist image"
-                      width={38}
-                      height={38}
-                    />
-                  ) : (
-                    <Avatar alt="Playlist image">
-                      <IconMusic />
-                    </Avatar>
-                  )}
-                  <Text>{playlist.name}</Text>
-                </Group>
-              </td>
-              <td>
-                <Anchor href={playlist.owner.uri}>
-                  <Group>
-                    {playlist.owner.images && playlist.owner.images.length ? (
-                      <Avatar src={playlist.owner.images[0].url} alt="User image" />
-                    ) : (
-                      <Avatar alt={playlist.name}>
-                        <IconUser />
-                      </Avatar>
-                    )}
-                    <Text>{playlist.owner.display_name}</Text>
-                  </Group>
-                </Anchor>
-              </td>
-              <td>
-                <Text>{playlist.tracks.total}</Text>
-              </td>
-              <td>
-                <Button component={Link} href={`/playlist/${playlist.id}`} leftIcon={<IconTestPipe />}>
-                  Start piping
-                </Button>
-              </td>
-            </tr>
+            <PlaylistRow key={playlist.id} playlist={playlist} />
           ))}
         </tbody>
       </Table>
