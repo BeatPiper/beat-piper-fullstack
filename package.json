@@ -14,15 +14,15 @@
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/server": "^11.10.0",
-    "@mantine/core": "^6.0.4",
-    "@mantine/dates": "^6.0.4",
-    "@mantine/form": "^6.0.4",
-    "@mantine/hooks": "^6.0.4",
-    "@mantine/modals": "^6.0.4",
-    "@mantine/next": "^6.0.4",
-    "@mantine/notifications": "^6.0.4",
-    "@prisma/client": "^4.11.0",
-    "@tabler/icons-react": "^2.11.0",
+    "@mantine/core": "^6.0.5",
+    "@mantine/dates": "^6.0.5",
+    "@mantine/form": "^6.0.5",
+    "@mantine/hooks": "^6.0.5",
+    "@mantine/modals": "^6.0.5",
+    "@mantine/next": "^6.0.5",
+    "@mantine/notifications": "^6.0.5",
+    "@prisma/client": "^4.12.0",
+    "@tabler/icons-react": "^2.12.0",
     "@tanstack/react-query": "^4.28.0",
     "@trpc/client": "^10.18.0",
     "@trpc/next": "^10.18.0",
@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@types/node": "^18.15.10",
-    "@types/react": "^18.0.29",
+    "@types/react": "^18.0.30",
     "@types/react-dom": "^18.0.11",
     "@types/spotify-web-api-node": "^5.0.7",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
@@ -51,7 +51,7 @@
     "eslint-config-next": "^13.2.4",
     "eslint-config-prettier": "^8.8.0",
     "prettier": "2.8.7",
-    "prisma": "^4.11.0",
+    "prisma": "^4.12.0",
     "typescript": "^4.9.5"
   }
 }
