@@ -196,32 +196,30 @@ function PlaylistTable() {
   }
 
   const handleCreatePlaylist = async () => {
-    const { details } = data;
+    const { details, image } = data;
 
-    if (details) {
-      const availableMaps = matchedTracks.map(({ maps }) => maps).flat();
-      const maps = selectedMaps
-        .map(x => availableMaps.find(y => y.id === x))
-        .filter((x): x is MapDetail => x !== undefined);
-      const playlist = await createPlaylist(
-        details.name,
-        details.description || `Playlist created by ${details.owner.display_name}`,
-        details.images.length ? details.images[0].url : '',
-        maps
-      );
-      const playlistJson = JSON.stringify(playlist, null, 4);
+    const availableMaps = matchedTracks.map(({ maps }) => maps).flat();
+    const maps = selectedMaps
+      .map(x => availableMaps.find(y => y.id === x))
+      .filter((x): x is MapDetail => x !== undefined);
+    const playlist = await createPlaylist(
+      details.name,
+      details.description || `Playlist created by ${details.owner.display_name}`,
+      image,
+      maps
+    );
+    const playlistJson = JSON.stringify(playlist, null, 4);
 
-      // download as file
-      const blob = new Blob([playlistJson], { type: 'application/json' });
-      const downloadUrl = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = downloadUrl;
-      a.setAttribute('download', 'playlist.bplist');
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(downloadUrl);
-    }
+    // download as file
+    const blob = new Blob([playlistJson], { type: 'application/json' });
+    const downloadUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    a.setAttribute('download', 'playlist.bplist');
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(downloadUrl);
   };
 
   return (

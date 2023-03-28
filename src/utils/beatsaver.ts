@@ -89,7 +89,7 @@ export async function matchTracks({ tracks }: { tracks: SpotifyApi.TrackObjectFu
 export async function createPlaylist(
   playlistTitle: string,
   playlistDescription: string,
-  imageUrl: string,
+  imageData: string | null,
   maps: Maps
 ): Promise<BeatSaberPlaylist> {
   const songs = maps.map(map => ({
@@ -99,21 +99,11 @@ export async function createPlaylist(
     uploader: map.uploader.name,
   }));
 
-  let image: string | null = null;
-  // TODO: implement downloading playlist image
-  /*if (imageUrl) {
-    const buffer = await download(imageUrl);
-    const fileType = await fileTypeFromBuffer(buffer);
-    if (fileType) {
-      image = `data:${fileType.mime};base64,${buffer.toString('base64')}`;
-    }
-  }*/
-
   return {
     playlistTitle,
     playlistDescription,
     playlistAuthor: 'Beat Piper',
     songs,
-    image,
+    image: imageData,
   };
 }

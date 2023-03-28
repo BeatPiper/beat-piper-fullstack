@@ -9,6 +9,7 @@ import {
   getPlaylistDetails,
 } from '@/utils/spotify';
 import z from 'zod';
+import { urlContentToDataUri } from '@/utils/image';
 
 export const spotifyRouter = router({
   get: protectedProcedure.query(async ({ ctx: { session } }) => {
@@ -91,6 +92,8 @@ export const spotifyRouter = router({
       const tracks = await getPlaylistTracks(session.user.userId, playlistId);
       const details = await getPlaylistDetails(session.user.userId, playlistId);
 
-      return { tracks, details };
+      const image = details.images.length ? await urlContentToDataUri(details.images[0].url) : null;
+
+      return { tracks, details, image };
     }),
 });
