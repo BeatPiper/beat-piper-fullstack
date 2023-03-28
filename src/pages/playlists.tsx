@@ -38,12 +38,15 @@ function PlaylistTable() {
     refetchOnWindowFocus: false,
   });
 
-  const myPlaylists = useMemo(() => {
+  const shownPlaylists = useMemo(() => {
     if (!data) {
       return [];
     }
+    if (!onlyOwn) {
+      return data.playlists;
+    }
     return data.playlists.filter(playlist => playlist.owner.id === data.spotifyUser.spotifyId);
-  }, [data]);
+  }, [data, onlyOwn]);
 
   if (isLoading) {
     return (
@@ -62,46 +65,6 @@ function PlaylistTable() {
       </Group>
     );
   }
-
-  const playlistRows = (playlists: SpotifyApi.PlaylistObjectSimplified[]) =>
-    playlists.map(playlist => (
-      <tr key={playlist.id}>
-        <td>
-          <Group>
-            {playlist.images && playlist.images.length ? (
-              <NextImage src={playlist.images[0].url} alt="Playlist image" width={38} height={38} />
-            ) : (
-              <Avatar alt="Playlist image">
-                <IconMusic />
-              </Avatar>
-            )}
-            <Text>{playlist.name}</Text>
-          </Group>
-        </td>
-        <td>
-          <Anchor href={playlist.owner.uri}>
-            <Group>
-              {playlist.owner.images && playlist.owner.images.length ? (
-                <Avatar src={playlist.owner.images[0].url} alt="User image" />
-              ) : (
-                <Avatar alt={playlist.name}>
-                  <IconUser />
-                </Avatar>
-              )}
-              <Text>{playlist.owner.display_name}</Text>
-            </Group>
-          </Anchor>
-        </td>
-        <td>
-          <Text>{playlist.tracks.total}</Text>
-        </td>
-        <td>
-          <Button component={Link} href={`/playlist/${playlist.id}`} leftIcon={<IconTestPipe />}>
-            Start piping
-          </Button>
-        </td>
-      </tr>
-    ));
 
   return (
     <Stack>
@@ -132,7 +95,51 @@ function PlaylistTable() {
             <th>Select</th>
           </tr>
         </thead>
-        <tbody>{playlistRows(onlyOwn ? myPlaylists : data.playlists)}</tbody>
+        <tbody>
+          {shownPlaylists.map(playlist => (
+            <tr key={playlist.id}>
+              <td>
+                <Group>
+                  {playlist.images && playlist.images.length ? (
+                    <NextImage
+                      src={playlist.images[0].url}
+                      alt="Playlist image"
+                      width={38}
+                      height={38}
+                    />
+                  ) : (
+                    <Avatar alt="Playlist image">
+                      <IconMusic />
+                    </Avatar>
+                  )}
+                  <Text>{playlist.name}</Text>
+                </Group>
+              </td>
+              <td>
+                <Anchor href={playlist.owner.uri}>
+                  <Group>
+                    {playlist.owner.images && playlist.owner.images.length ? (
+                      <Avatar src={playlist.owner.images[0].url} alt="User image" />
+                    ) : (
+                      <Avatar alt={playlist.name}>
+                        <IconUser />
+                      </Avatar>
+                    )}
+                    <Text>{playlist.owner.display_name}</Text>
+                  </Group>
+                </Anchor>
+              </td>
+              <td>
+                <Text>{playlist.tracks.total}</Text>
+              </td>
+              <td>
+                <Button component={Link} href={`/playlist/${playlist.id}`} leftIcon={<IconTestPipe />}>
+                  Start piping
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
       </Table>
     </Stack>
   );
