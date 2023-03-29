@@ -18,8 +18,10 @@ function App({ Component, pageProps: { session, ...pageProps } }: CustomAppProps
   return (
     <>
       <Head>
-        <title>Page title</title>
+        <title>BeatPiper</title>
+        <meta name="description" content="Search for Beat Saber maps using Spotify playlists" />
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <PlausibleProvider domain="beatpiper.com" customDomain="https://analytics.soundux.rocks">
