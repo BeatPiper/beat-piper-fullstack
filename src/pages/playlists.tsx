@@ -32,7 +32,7 @@ function PlaylistTable() {
     if (!onlyOwn) {
       return data.playlists;
     }
-    return data.playlists.filter(playlist => playlist.owner.id === data.spotifyUser.spotifyId);
+    return data.playlists.filter(playlist => playlist.owner.id === data.spotifyUser.providerAccountId);
   }, [data, onlyOwn]);
 
   if (isLoading) {

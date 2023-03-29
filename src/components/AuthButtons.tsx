@@ -1,5 +1,5 @@
-import { Button, Group } from '@mantine/core';
-import { IconLogin, IconLogout, IconUserPlus } from '@tabler/icons-react';
+import { Avatar, Button, Group, Menu, UnstyledButton } from '@mantine/core';
+import { IconLogin, IconLogout, IconUser, IconUserCog } from '@tabler/icons-react';
 import { useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { signOut, useSession } from 'next-auth/react';
@@ -9,14 +9,32 @@ function AuthButtons() {
   const session = useSession();
   const router = useRouter();
   const isOnAuthRoute = useMemo(() => {
-    return router.pathname === '/sign-up' || router.pathname === '/log-in';
+    return router.pathname === '/log-in';
   }, [router.pathname]);
 
   if (session.status === 'authenticated') {
     return (
-      <Button onClick={() => signOut({ redirect: false })} leftIcon={<IconLogout />}>
-        Logout
-      </Button>
+      <Menu shadow="md" width={200} transitionProps={{ transition: 'pop-top-right' }}>
+        <Menu.Target>
+          <Avatar radius="xl" src={session.data.user.image} component={UnstyledButton}>
+            <IconUser />
+          </Avatar>
+        </Menu.Target>
+
+        <Menu.Dropdown>
+          <Menu.Label>Account</Menu.Label>
+          <Menu.Item icon={<IconUserCog size={14} />} component={Link} href="/profile">
+            Manage
+          </Menu.Item>
+
+          <Menu.Divider />
+
+          <Menu.Label>Actions</Menu.Label>
+          <Menu.Item icon={<IconLogout size={14} />} onClick={() => signOut({ redirect: false })}>
+            Logout
+          </Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
     );
   }
 
@@ -26,9 +44,6 @@ function AuthButtons() {
 
   return (
     <Group noWrap>
-      <Button component={Link} href="/sign-up" leftIcon={<IconUserPlus />}>
-        Sign up
-      </Button>
       <Button component={Link} href="/log-in" leftIcon={<IconLogin />}>
         Log In
       </Button>

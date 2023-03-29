@@ -1,75 +1,33 @@
 import { getServerSession, type NextAuthOptions } from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import { verify } from 'argon2';
-
 import { prisma } from '@/server/prisma';
 import type { GetServerSidePropsContext } from 'next';
-import { userSchema } from '@/utils/validation/auth';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import SpotifyProvider from 'next-auth/providers/spotify';
+import { env } from '@/env.mjs';
 
 export const nextAuthOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma),
   providers: [
-    CredentialsProvider({
-      name: 'Credentials',
-      credentials: {
-        email: {
-          label: 'Email',
-          type: 'email',
-          placeholder: 'example@domain.com',
-        },
-        password: { label: 'Password', type: 'password' },
-      },
-      async authorize(credentials) {
-        try {
-          const { email, password } = await userSchema.parseAsync(credentials);
-
-          const result = await prisma.user.findFirst({
-            where: { email },
-          });
-
-          if (!result) {
-            return null;
-          }
-
-          const isValidPassword = await verify(result.password, password);
-
-          if (!isValidPassword) {
-            return null;
-          }
-
-          return {
-            id: result.id,
-            email,
-          };
-        } catch {
-          return null;
-        }
-      },
+    SpotifyProvider({
+      clientId: env.SPOTIFY_CLIENT_ID,
+      clientSecret: env.SPOTIFY_CLIENT_SECRET,
+      authorization:
+        'https://accounts.spotify.com/authorize?scope=user-read-email+playlist-read-private+playlist-read-collaborative&show_dialog=true',
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.userId = user.id;
-        token.email = user.email;
-      }
-
-      return token;
-    },
-    async session({ session, token }) {
-      if (token) {
-        session.user.userId = token.userId;
-        session.user.email = token.email;
+    session({ session, user }) {
+      if (session.user) {
+        session.user.userId = user.id;
+        session.user.email = user.email;
       }
 
       return session;
     },
   },
-  jwt: {
-    maxAge: 15 * 24 * 30 * 60, // 15 days
-  },
   pages: {
     signIn: '/log-in',
-    newUser: '/sign-up',
+    newUser: '/onboarding', // TODO: implement onboarding
   },
 };
 

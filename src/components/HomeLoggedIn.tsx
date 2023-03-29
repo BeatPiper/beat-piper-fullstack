@@ -2,7 +2,7 @@ import { Button, Group, Loader, Stack, Text, Title } from '@mantine/core';
 import { useSession } from 'next-auth/react';
 import { trpc } from '@/utils/trpc';
 import Link from 'next/link';
-import { IconBrandSpotify, IconPlayerPlay } from '@tabler/icons-react';
+import { IconPlayerPlay } from '@tabler/icons-react';
 import { type Session } from 'next-auth';
 
 function HomeLoggedIn() {
@@ -14,21 +14,17 @@ function HomeLoggedIn() {
 
   return (
     <Stack align="center">
-      <Title order={2}>Hi {session.user.email}, thank you for using Beat Piper</Title>
+      <Title order={2}>Hi {session.user.name}, thank you for using Beat Piper</Title>
       <StartButtons session={session} />
     </Stack>
   );
 }
 
 function StartButtons({ session }: { session: Session }) {
-  const { isLoading, isError, data, error, remove } = trpc.spotify.get.useQuery(undefined, {
+  const { isLoading, isError, data, error } = trpc.spotify.get.useQuery(undefined, {
     retry: false,
     refetchOnWindowFocus: false,
     enabled: session.user !== undefined,
-  });
-
-  const logout = trpc.spotify.logout.useMutation({
-    onMutate: remove,
   });
 
   if (isLoading) {
@@ -52,20 +48,6 @@ function StartButtons({ session }: { session: Session }) {
       ) : (
         <Button leftIcon={<IconPlayerPlay />} disabled>
           Start Piping
-        </Button>
-      )}
-      {data ? (
-        <Button onClick={() => logout.mutate()} color="green" leftIcon={<IconBrandSpotify />}>
-          Log out Spotify
-        </Button>
-      ) : (
-        <Button
-          component={Link}
-          href="/api/trpc/spotify.auth"
-          color="green"
-          leftIcon={<IconBrandSpotify />}
-        >
-          Login with Spotify
         </Button>
       )}
     </Group>
