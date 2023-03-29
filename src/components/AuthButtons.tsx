@@ -16,7 +16,13 @@ function AuthButtons() {
     return (
       <Menu shadow="md" width={200} transitionProps={{ transition: 'pop-top-right' }}>
         <Menu.Target>
-          <Avatar radius="xl" src={session.data.user.image} component={UnstyledButton}>
+          <Avatar
+            radius="xl"
+            src={session.data.user.image}
+            alt="Profile picture"
+            aria-label="Profile menu"
+            component={UnstyledButton}
+          >
             <IconUser />
           </Avatar>
         </Menu.Target>
