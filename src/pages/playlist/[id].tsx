@@ -188,9 +188,18 @@ function PlaylistTable() {
     // TODO: show progress
     return (
       <Stack align="center">
-        <Image src="/logo.png" height={250} fit="contain" alt="Logo" />
         <Title>Piping...</Title>
-        <Loader size="xl" variant="bars" mt="xl" />
+        <Loader size="xl" variant="bars" my="xl" />
+        <Image
+          src={data.image}
+          height={200}
+          width={200}
+          alt="Playlist image"
+          radius="md"
+          caption={<Text color="white">{data.details.name}</Text>}
+          withPlaceholder
+        />
+        <Image src="/logo.png" height={150} fit="contain" alt="Logo" />
       </Stack>
     );
   }
