@@ -1,7 +1,7 @@
 import { Button, Card, Group, Stack, Text, TextInput, Title, useMantineTheme } from '@mantine/core';
-import Head from 'next/head';
 import { useSession } from 'next-auth/react';
 import { IconTrash } from '@tabler/icons-react';
+import PageTitle from '@/components/PageTitle';
 
 function ProfilePage() {
   const { data: session, status } = useSession();
@@ -13,9 +13,7 @@ function ProfilePage() {
 
   return (
     <>
-      <Head>
-        <title>My Account</title>
-      </Head>
+      <PageTitle title="My Account" />
       <Group position="center">
         <Card radius="lg" p="xl" withBorder style={{ minWidth: 400 }}>
           <Stack spacing="sm">

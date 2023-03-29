@@ -44,6 +44,7 @@ import { createPlaylist, matchTracks } from '@/utils/beatsaver';
 import { useListState } from '@mantine/hooks';
 import { type MapDetail } from 'beatsaver-api/lib/models/MapDetail';
 import NextImage from 'next/image';
+import PageTitle from '@/components/PageTitle';
 
 const useStyles = createStyles(theme => ({
   header: {
@@ -66,17 +67,6 @@ const useStyles = createStyles(theme => ({
 }));
 
 function Playlist() {
-  return (
-    <>
-      <Head>
-        <title>Playlist</title>
-      </Head>
-      <PlaylistTable />
-    </>
-  );
-}
-
-function PlaylistTable() {
   const { classes } = useStyles();
   const router = useRouter();
   const id = router.query.id as string;
@@ -168,39 +158,48 @@ function PlaylistTable() {
 
   if (isLoading) {
     return (
-      <Stack align="center">
-        <Image src="/logo.png" height={250} fit="contain" alt="Logo" />
-        <Title>Fetching playlist...</Title>
-        <Loader size="xl" mt="xl" />
-      </Stack>
+      <>
+        <PageTitle title="Fetching playlist" />
+        <Stack align="center">
+          <Image src="/logo.png" height={250} fit="contain" alt="Logo" />
+          <Title>Fetching playlist...</Title>
+          <Loader size="xl" mt="xl" />
+        </Stack>
+      </>
     );
   }
 
   if (isError) {
     return (
-      <Group position="center">
-        <Text>{error?.message}</Text>
-      </Group>
+      <>
+        <PageTitle title="Error" />
+        <Group position="center">
+          <Text>{error?.message}</Text>
+        </Group>
+      </>
     );
   }
 
   if (!matchedTracks) {
     // TODO: show progress
     return (
-      <Stack align="center">
-        <Title>Piping...</Title>
-        <Loader size="xl" variant="bars" my="xl" />
-        <Image
-          src={data.image}
-          height={200}
-          width={200}
-          alt="Playlist image"
-          radius="md"
-          caption={<Text color="white">{data.details.name}</Text>}
-          withPlaceholder
-        />
-        <Image src="/logo.png" height={150} fit="contain" alt="Logo" />
-      </Stack>
+      <>
+        <PageTitle title="Piping..." />
+        <Stack align="center">
+          <Title>Piping...</Title>
+          <Loader size="xl" variant="bars" my="xl" />
+          <Image
+            src={data.image}
+            height={200}
+            width={200}
+            alt="Playlist image"
+            radius="md"
+            caption={<Text color="white">{data.details.name}</Text>}
+            withPlaceholder
+          />
+          <Image src="/logo.png" height={150} fit="contain" alt="Logo" />
+        </Stack>
+      </>
     );
   }
 
