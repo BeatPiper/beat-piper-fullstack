@@ -7,6 +7,7 @@ import { SessionProvider } from 'next-auth/react';
 import Link from 'next/link';
 import AuthButtons from '@/components/AuthButtons';
 import PlausibleProvider from 'next-plausible';
+import { env } from '@/env.mjs';
 
 interface CustomAppProps extends AppProps {
   pageProps: {
@@ -24,7 +25,11 @@ function App({ Component, pageProps: { session, ...pageProps } }: CustomAppProps
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <PlausibleProvider domain="beatpiper.com" customDomain="https://analytics.soundux.rocks">
+      <PlausibleProvider
+        enabled={!!env.NEXT_PUBLIC_PLAUSIBLE_HOST}
+        domain={env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
+        customDomain={env.NEXT_PUBLIC_PLAUSIBLE_HOST}
+      >
         <SessionProvider session={session}>
           <MantineProvider
             withGlobalStyles
