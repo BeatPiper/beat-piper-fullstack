@@ -27,7 +27,6 @@ export const nextAuthOptions: NextAuthOptions = {
   },
   pages: {
     signIn: '/log-in',
-    newUser: '/onboarding', // TODO: implement onboarding
   },
 };
 
