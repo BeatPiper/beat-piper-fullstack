@@ -1,11 +1,11 @@
-import { Badge, Button, Card, Group, Stack, Text, Title, useMantineTheme } from '@mantine/core';
-import { IconBrandGoogle, IconBrandSpotify } from '@tabler/icons-react';
+import { Alert, Badge, Button, Card, Group, Stack, Text, Title, useMantineTheme } from '@mantine/core';
+import { IconAlertCircle, IconBrandGoogle, IconBrandSpotify } from '@tabler/icons-react';
 import Head from 'next/head';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
 function LogIn() {
-  const router = useRouter();
+  const { query } = useRouter();
   const theme = useMantineTheme();
 
   return (
@@ -21,14 +21,18 @@ function LogIn() {
               <Text color={theme.colors.gray[5]}>Please choose your provider to continue</Text>
             </Stack>
 
+            {query.error && (
+              <Alert color="red" title="Error" icon={<IconAlertCircle />}>
+                {query.error}
+              </Alert>
+            )}
+
             <Button
               leftIcon={<IconBrandSpotify />}
               variant="outline"
               color="green"
               fullWidth
-              onClick={() =>
-                signIn('spotify', { callbackUrl: (router.query.callbackUrl as string) || '/' })
-              }
+              onClick={() => signIn('spotify', { callbackUrl: (query.callbackUrl as string) || '/' })}
             >
               <Group spacing="xs">Log in with Spotify</Group>
             </Button>
