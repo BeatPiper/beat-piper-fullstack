@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "format": "prettier --loglevel warn --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\" --ignore-path .gitignore",
+    "format": "prettier --loglevel warn --write \"./**/*.{js,ts,mjs,mts,cjs,cts,jsx,tsx,css,md,json}\" --ignore-path .gitignore",
     "prisma:studio": "BROWSER=none prisma studio"
   },
   "dependencies": {
