@@ -29,7 +29,13 @@ jobs:
         run: yarn
 
       - name: 🚨 ESLint
-        run: yarn lint
+        run: yarn lint -o eslint_report.json -f json
+
+      - name: 📝 Annotate ESLint
+        uses: ataylorme/eslint-annotate-action@v2
+        with:
+          repo-token: '${{ secrets.GITHUB_TOKEN }}'
+          report-json: 'eslint_report.json'
 
       - name: 🔍 Type Check
         run: yarn typecheck
