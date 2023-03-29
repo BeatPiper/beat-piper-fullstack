@@ -1,2 +1,0 @@
-- Redirect on logout when on authenticated page
-- Scroll restoration
