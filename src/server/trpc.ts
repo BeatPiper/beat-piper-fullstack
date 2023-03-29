@@ -1,6 +1,7 @@
 import { initTRPC, TRPCError } from '@trpc/server';
 import { type CreateNextContextOptions } from '@trpc/server/adapters/next';
 import { getServerAuthSession } from '@/server/auth';
+import { ZodError } from 'zod';
 import { prisma } from '@/server/prisma';
 import superjson from 'superjson';
 
@@ -23,6 +24,15 @@ export async function createContext({ req, res }: CreateNextContextOptions) {
 
 const t = initTRPC.context<typeof createContext>().create({
   transformer: superjson,
+  errorFormatter({ shape, error }) {
+    return {
+      ...shape,
+      data: {
+        ...shape.data,
+        zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
+      },
+    };
+  },
 });
 
 /**
