@@ -34,7 +34,7 @@ function LogIn() {
               fullWidth
               onClick={() => signIn('spotify', { callbackUrl: (query.callbackUrl as string) || '/' })}
             >
-              <Group spacing="xs">Log in with Spotify</Group>
+              Log in with Spotify
             </Button>
             <Button leftIcon={<IconBrandGoogle />} variant="outline" color="gray" fullWidth>
               <Group spacing="xs">
