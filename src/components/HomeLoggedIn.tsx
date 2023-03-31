@@ -41,15 +41,9 @@ function StartButtons({ session }: { session: Session }) {
 
   return (
     <Group>
-      {data ? (
-        <Button component={Link} href="/playlists" leftIcon={<IconPlayerPlay />}>
-          Start Piping
-        </Button>
-      ) : (
-        <Button leftIcon={<IconPlayerPlay />} disabled>
-          Start Piping
-        </Button>
-      )}
+      <Button component={Link} href="/playlists" leftIcon={<IconPlayerPlay />} disabled={!data}>
+        Show my playlists
+      </Button>
     </Group>
   );
 }
