@@ -1,24 +1,14 @@
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import {
-  ActionIcon,
-  AppShell,
-  Button,
-  Group,
-  Header,
-  Image,
-  MantineProvider,
-  MediaQuery,
-  Title,
-} from '@mantine/core';
+import { AppShell, Group, Header, Image, MantineProvider, MediaQuery, Title } from '@mantine/core';
 import { type Session } from 'next-auth';
 import { trpc } from '@/utils/trpc';
 import { SessionProvider } from 'next-auth/react';
 import Link from 'next/link';
-import AuthButtons from '@/components/AuthButtons';
 import PlausibleProvider from 'next-plausible';
 import { env } from '@/env.mjs';
-import { IconBrandGithub } from '@tabler/icons-react';
+import AppNavbar from '@/components/AppNavbar';
+import AppRightSection from '@/components/AppRightSection';
 
 interface CustomAppProps extends AppProps {
   pageProps: {
@@ -51,8 +41,8 @@ function App({ Component, pageProps: { session, ...pageProps } }: CustomAppProps
               padding="md"
               header={
                 <Header height={60} p="xs" fixed>
-                  <Group sx={{ height: '100%' }} px={20} position="apart" noWrap>
-                    <Group noWrap>
+                  <Group sx={{ height: '100%', whiteSpace: 'nowrap' }} px={20} position="apart" noWrap>
+                    <Group noWrap position="left" sx={{ flexGrow: 1, flexShrink: 1, flexBasis: '0%' }}>
                       <Link href="/">
                         <Image src="/logo.png" alt="Logo" height={28} />
                       </Link>
@@ -60,14 +50,13 @@ function App({ Component, pageProps: { session, ...pageProps } }: CustomAppProps
                         <Title order={2}>Beat Piper</Title>
                       </MediaQuery>
                     </Group>
-                    <Group noWrap>
-                      <ActionIcon component={Link} href="https://github.com/BeatPiper" target="_blank">
-                        <IconBrandGithub />
-                      </ActionIcon>
-                      <Button variant="subtle" compact component={Link} href="/privacy-policy">
-                        Privacy policy
-                      </Button>
-                      <AuthButtons />
+                    <Group noWrap sx={{ flexGrow: 0, flexShrink: 0, flexBasis: 'auto' }}>
+                      <MediaQuery query="(max-width: 850px)" styles={{ display: 'none' }}>
+                        <AppNavbar />
+                      </MediaQuery>
+                    </Group>
+                    <Group noWrap position="right" sx={{ flexGrow: 1, flexShrink: 1, flexBasis: '0%' }}>
+                      <AppRightSection />
                     </Group>
                   </Group>
                 </Header>

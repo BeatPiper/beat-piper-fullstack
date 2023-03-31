@@ -234,9 +234,6 @@ function Playlist() {
   return (
     <Stack>
       <Group grow>
-        <Button component={Link} href="/playlists" leftIcon={<IconArrowBack />} color="gray">
-          Back to playlists
-        </Button>
         <Button type="submit" leftIcon={<IconArchive />} disabled={!isPremium || !selectedMaps.length}>
           Download as archive (.zip)
         </Button>

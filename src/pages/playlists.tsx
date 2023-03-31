@@ -53,11 +53,6 @@ function PlaylistTable() {
 
   return (
     <Stack>
-      <Group grow>
-        <Button component={Link} href="/" leftIcon={<IconHome />} color="gray">
-          Home
-        </Button>
-      </Group>
       <Group position="center">
         <Card radius="md">
           <Checkbox
