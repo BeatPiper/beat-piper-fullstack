@@ -1,6 +1,16 @@
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import { AppShell, Group, Header, Image, MantineProvider, MediaQuery, Title } from '@mantine/core';
+import {
+  ActionIcon,
+  AppShell,
+  Button,
+  Group,
+  Header,
+  Image,
+  MantineProvider,
+  MediaQuery,
+  Title,
+} from '@mantine/core';
 import { type Session } from 'next-auth';
 import { trpc } from '@/utils/trpc';
 import { SessionProvider } from 'next-auth/react';
@@ -8,6 +18,7 @@ import Link from 'next/link';
 import AuthButtons from '@/components/AuthButtons';
 import PlausibleProvider from 'next-plausible';
 import { env } from '@/env.mjs';
+import { IconBrandGithub } from '@tabler/icons-react';
 
 interface CustomAppProps extends AppProps {
   pageProps: {
@@ -49,7 +60,15 @@ function App({ Component, pageProps: { session, ...pageProps } }: CustomAppProps
                         <Title order={2}>Beat Piper</Title>
                       </MediaQuery>
                     </Group>
-                    <AuthButtons />
+                    <Group noWrap>
+                      <ActionIcon component={Link} href="https://github.com/BeatPiper" target="_blank">
+                        <IconBrandGithub />
+                      </ActionIcon>
+                      <Button variant="subtle" compact component={Link} href="/privacy-policy">
+                        Privacy policy
+                      </Button>
+                      <AuthButtons />
+                    </Group>
                   </Group>
                 </Header>
               }
