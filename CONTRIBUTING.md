@@ -7,7 +7,7 @@ This is the fullstack [Next.js](https://nextjs.org/) project for [BeatPiper](htt
 This project makes use of the following technologies
 
 - Continuous Integration with [GitHub Actions](https://github.com/features/actions)
-- Email/Password Authentication with [NextAuth](https://next-auth.js.org/)
+- Spotify Authentication with [NextAuth](https://next-auth.js.org/)
 - Database ORM with [Prisma](https://prisma.io)
 - Components and styling with [Mantine](https://mantine.dev/)
 - Code formatting with [Prettier](https://prettier.io)
