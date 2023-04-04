@@ -1,8 +1,7 @@
 import { trpc } from '@/utils/trpc';
-import { Button, Card, Checkbox, Group, Image, Loader, Stack, Table, Text, Title } from '@mantine/core';
-import { IconHome, IconUserCog } from '@tabler/icons-react';
+import { Card, Checkbox, Group, Image, Loader, Stack, Table, Text, Title } from '@mantine/core';
+import { IconUserCog } from '@tabler/icons-react';
 import PlaylistRow from '@/components/PlaylistRow';
-import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import PageTitle from '@/components/PageTitle';
 

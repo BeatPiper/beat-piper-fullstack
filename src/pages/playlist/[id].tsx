@@ -25,7 +25,6 @@ import {
 import {
   IconAlertCircle,
   IconArchive,
-  IconArrowBack,
   IconCheck,
   IconChecklist,
   IconChecks,
@@ -37,7 +36,6 @@ import {
   IconUser,
   IconX,
 } from '@tabler/icons-react';
-import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { createPlaylist, matchTracks } from '@/utils/beatsaver';
 import { useListState } from '@mantine/hooks';
