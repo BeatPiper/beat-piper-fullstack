@@ -11,16 +11,16 @@ import { urlContentToDataUri } from '@/utils/image';
 import { filterAccountForClient } from '@/server/helpers/filterAccountForClient';
 
 export const spotifyRouter = router({
-  get: protectedProcedure.query(async ({ ctx: { session } }) => {
+  get: protectedProcedure.query(async ({ ctx: { session, prisma } }) => {
     const {
       user: { userId },
     } = session;
 
-    const spotifyUser = await getSpotifyUser(userId);
+    const spotifyUser = await getSpotifyUser(prisma, userId);
     return spotifyUser ? filterAccountForClient(spotifyUser) : null;
   }),
-  playlists: protectedProcedure.query(async ({ ctx: { session } }) => {
-    const spotifyUser = filterAccountForClient(await grantSpotify(session.user.userId));
+  playlists: protectedProcedure.query(async ({ ctx: { session, prisma } }) => {
+    const spotifyUser = filterAccountForClient(await grantSpotify(prisma, session.user.userId));
     // TODO: implement pagination
     const playlists = await getPlaylists();
 
@@ -32,8 +32,8 @@ export const spotifyRouter = router({
         playlistId: z.string(),
       })
     )
-    .query(async ({ input, ctx: { session } }) => {
-      await grantSpotify(session.user.userId);
+    .query(async ({ input, ctx: { session, prisma } }) => {
+      await grantSpotify(prisma, session.user.userId);
       const { playlistId } = input;
 
       // TODO: implement pagination

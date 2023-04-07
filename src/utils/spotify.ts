@@ -1,7 +1,6 @@
 import SpotifyWebApi from 'spotify-web-api-node';
 import { type User } from 'next-auth';
-import { prisma } from '@/server/prisma';
-import { type Account } from '@prisma/client';
+import { type Account, type PrismaClient } from '@prisma/client';
 import { env } from '@/env.mjs';
 import { TRPCError } from '@trpc/server';
 
@@ -13,14 +12,14 @@ export const spotifyApi = new SpotifyWebApi({
 
 const SPOTIFY_PAGINATION_LIMIT = 50;
 
-export async function getSpotifyUser(userId: User['id']) {
+export async function getSpotifyUser(prisma: PrismaClient, userId: User['id']) {
   return prisma.account.findFirst({
     where: { userId, provider: 'spotify' },
   });
 }
 
-export async function grantSpotify(userId: User['id']) {
-  const spotifyUser = await getSpotifyUser(userId);
+export async function grantSpotify(prisma: PrismaClient, userId: User['id']) {
+  const spotifyUser = await getSpotifyUser(prisma, userId);
   if (!spotifyUser) {
     throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Spotify user not found' });
   }
@@ -33,7 +32,7 @@ export async function grantSpotify(userId: User['id']) {
   spotifyApi.setRefreshToken(spotifyUser.refresh_token);
 
   if (Date.now() > spotifyUser.expires_at * 1000) {
-    const refreshedUser = await refreshSpotifyUser(spotifyUser);
+    const refreshedUser = await refreshSpotifyUser(prisma, spotifyUser);
 
     if (!refreshedUser.access_token || !refreshedUser.refresh_token) {
       throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Spotify user not authorized' });
@@ -47,7 +46,7 @@ export async function grantSpotify(userId: User['id']) {
   return spotifyUser;
 }
 
-export async function refreshSpotifyUser(spotifyUser: Account) {
+export async function refreshSpotifyUser(prisma: PrismaClient, spotifyUser: Account) {
   const { body } = await spotifyApi.refreshAccessToken();
   // TODO: handle error
   return await prisma.account.update({
