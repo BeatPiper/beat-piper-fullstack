@@ -3,7 +3,7 @@ import { Card, Checkbox, Group, Image, Loader, Stack, Table, Text, Title } from 
 import { IconUserCog } from '@tabler/icons-react';
 import PlaylistRow from '@/components/PlaylistRow';
 import { useMemo, useState } from 'react';
-import PageTitle from '@/components/PageTitle';
+import PageTitle from '@/components/app/PageTitle';
 
 function Playlists() {
   return (

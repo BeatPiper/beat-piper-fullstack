@@ -41,7 +41,7 @@ import { createPlaylist, matchTracks } from '@/utils/beatsaver';
 import { useListState } from '@mantine/hooks';
 import { type MapDetail } from 'beatsaver-api/lib/models/MapDetail';
 import NextImage from 'next/image';
-import PageTitle from '@/components/PageTitle';
+import PageTitle from '@/components/app/PageTitle';
 
 const useStyles = createStyles(theme => ({
   header: {

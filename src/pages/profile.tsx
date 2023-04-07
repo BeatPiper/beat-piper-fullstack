@@ -11,7 +11,7 @@ import {
 } from '@mantine/core';
 import { signOut, useSession } from 'next-auth/react';
 import { IconCircleX, IconTrash } from '@tabler/icons-react';
-import PageTitle from '@/components/PageTitle';
+import PageTitle from '@/components/app/PageTitle';
 import { trpc } from '@/utils/trpc';
 import { useDisclosure } from '@mantine/hooks';
 import { useRouter } from 'next/router';

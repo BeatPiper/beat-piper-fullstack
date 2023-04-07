@@ -1,7 +1,7 @@
 import { ActionIcon, Button } from '@mantine/core';
 import Link from 'next/link';
 import { IconBrandGithub } from '@tabler/icons-react';
-import AuthButtons from '@/components/AuthButtons';
+import AuthButtons from '@/components/app/AuthButtons';
 
 function AppRightSection() {
   return (

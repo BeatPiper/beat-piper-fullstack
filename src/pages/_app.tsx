@@ -7,8 +7,8 @@ import { SessionProvider } from 'next-auth/react';
 import Link from 'next/link';
 import PlausibleProvider from 'next-plausible';
 import { env } from '@/env.mjs';
-import AppNavbar from '@/components/AppNavbar';
-import AppRightSection from '@/components/AppRightSection';
+import AppNavbar from '@/components/app/AppNavbar';
+import AppRightSection from '@/components/app/AppRightSection';
 
 interface CustomAppProps extends AppProps {
   pageProps: {
