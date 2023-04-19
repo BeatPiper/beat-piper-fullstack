@@ -1,9 +1,15 @@
 import Head from 'next/head';
 import { Title, Text, Stack, Button } from '@mantine/core';
-import Link from 'next/link';
 import { IconArrowBack } from '@tabler/icons-react';
+import { useRouter } from 'next/router';
 
 function Custom404() {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.back();
+  };
+
   return (
     <>
       <Head>
@@ -14,7 +20,7 @@ function Custom404() {
         <Text color="dimmed" size="lg" align="center">
           You may have mistyped the address, or the page has been moved to another URL.
         </Text>
-        <Button component={Link} href="/" size="md" leftIcon={<IconArrowBack />}>
+        <Button onClick={handleClick} size="md" leftIcon={<IconArrowBack />}>
           Back to safety
         </Button>
       </Stack>
