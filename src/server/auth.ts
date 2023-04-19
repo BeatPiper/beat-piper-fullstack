@@ -20,6 +20,7 @@ export const nextAuthOptions: NextAuthOptions = {
       if (session.user) {
         session.user.userId = user.id;
         session.user.email = user.email;
+        session.user.role = user.role;
       }
 
       return session;

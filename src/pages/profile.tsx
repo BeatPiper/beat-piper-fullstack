@@ -1,4 +1,6 @@
 import {
+  Alert,
+  Anchor,
   Button,
   Card,
   Group,
@@ -10,11 +12,18 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { signOut, useSession } from 'next-auth/react';
-import { IconCircleX, IconTrash } from '@tabler/icons-react';
+import {
+  IconCirclePlus,
+  IconCircleX,
+  IconSettingsPlus,
+  IconTrash,
+  IconUserPlus,
+} from '@tabler/icons-react';
 import PageTitle from '@/components/app/PageTitle';
 import { trpc } from '@/utils/trpc';
 import { useDisclosure } from '@mantine/hooks';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 function ProfilePage() {
   const { data: session, status } = useSession();
@@ -44,6 +53,38 @@ function ProfilePage() {
               <Title order={2}>Welcome</Title>
               <Text color={theme.colors.gray[5]}>Manage your account here</Text>
             </Stack>
+
+            {session?.user.role === 'PLUS' ? (
+              <Alert
+                icon={<IconCirclePlus size="1rem" color="green" />}
+                title="You are a Beat Piper Plus member!"
+                color="dark"
+                radius="lg"
+                variant="filled"
+              >
+                <Anchor color={theme.colors.gray[5]} component={Link} href="/plus">
+                  <Group spacing="xs">
+                    <IconSettingsPlus />
+                    <Text>Manage your subscription</Text>
+                  </Group>
+                </Anchor>
+              </Alert>
+            ) : (
+              <Alert
+                icon={<IconCirclePlus size="1rem" color="red" />}
+                title="You don't have Beat Piper Plus!"
+                color="dark"
+                radius="lg"
+                variant="filled"
+              >
+                <Anchor color={theme.colors.gray[5]} component={Link} href="/plus">
+                  <Group spacing="xs">
+                    <IconUserPlus />
+                    <Text>Upgrade to Beat Piper Plus now</Text>
+                  </Group>
+                </Anchor>
+              </Alert>
+            )}
 
             <Modal
               opened={opened}
@@ -75,8 +116,8 @@ function ProfilePage() {
             </Modal>
 
             <Stack spacing="sm">
-              <TextInput label="Name" value={session.user.name ?? ''} readOnly />
-              <TextInput label="Email" value={session.user.email ?? ''} disabled />
+              <TextInput label="Name" value={session?.user.name ?? ''} readOnly />
+              <TextInput label="Email" value={session?.user.email ?? ''} disabled />
               <Button variant="outline" color="red" fullWidth onClick={open} leftIcon={<IconTrash />}>
                 Delete my account
               </Button>
